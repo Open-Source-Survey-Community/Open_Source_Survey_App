@@ -1,0 +1,57 @@
+{
+  "home":{
+    "descripcion":"Create you survey from a way different",
+    "login": "Begin today and share your knowledge",
+    "acerca": "About OSS",
+    "problema": "Description of the Problem",
+    "contenido_problema":"the problem is that",
+    "diseño_solucion":"Design of solution",
+    "contenido_diseño_solucion":"Content design solucion",
+    "caracteristicas_app":"Features of OSS",
+    "contenido_caracteristicas_app":"Content features of the App",
+    "Resultados":"You results to show us are said if the tool is effective!",
+    "contenido_resultados":"description of results",
+    "equipo_trabajo":"Our Amazing Team",
+    "contenido_equipo_trabajo":"content of team work!!",
+    "usuario1":"description usuario 1",
+    "usuario2":"description usuario 2",
+    "usuario3":"description usuario 3",
+    "usuario4":"description usuario 4",
+    "sugerencias":"suggestion",
+    "contenido_sugerencia":"content of suggents",
+    "escribenos":"write to us",
+    "nombre":"name",
+    "correo":"email",
+    "texto":"write hear your description",
+    "enviar_sugerencia":"send"
+  },
+  "login":{
+    "titulo":"The platform is free",
+    "contenido":"A new way to manage your survey in our community",
+    "description":"Register you first question"
+  },
+  "footer":{
+    "titulo":"title of content of footer",
+    "contenido":"content of title",
+    "informacion":"Information Platform",
+    "telefono":"cellphone",
+    "universidad":"college",
+    "pais": "country",
+    "ciudad":"city"
+  },
+  "iconos":{
+    "logintwitter": "CONNECT TWITTER",
+    "loginGoogle": "CONNECT GOOGLE",
+    "loginGithub": "CONNECT GITHUB"
+  },
+  "no-encontrado":{
+    "titulo": "The page not found",
+    "descripcion":"Sorry, but the page you were trying to view does not exist.",
+    "enlace": "Take me home"
+  },
+  "no-disponible":{
+    "titulo": "Service is currently unavailable",
+    "descripcion": "Sorry but now, we have problem with the server, you can try late",
+    "enlace":"take me home"
+  }
+}

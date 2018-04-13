@@ -1,0 +1,56 @@
+{
+  "home":{
+    "descripcion":"Crea las encuestas de una manera diferente",
+    "login": "Comienza hoy a desarrollar tus encuestas y compartirlas con los demas, es gratuita",
+    "acerca": "Acerca de OSS",
+    "problema": "Descripcion del problema",
+    "contenido_problema":"Este es un contenido del problema",
+    "diseño_solucion":"Nuestra solucion",
+    "contenido_diseño_solucion":"Contenido del diseño de la solucion",
+    "caracteristicas_app":"Caracteristicas de OSS",
+    "contenido_caracteristicas_app":"Contenido de las carcateristicas de app",
+    "Resultados":"Tus resultados nos ayudan  a constatar si nuestra herramienta es uti!",
+    "contenido_resultados":"Descripcion de los resultados",
+    "equipo_trabajo":"Nuestro equipo de trabajo",
+    "contenido_equipo_trabajo":"Contenido del equipo de trabajo!!",
+    "usuario1":"Descripcion del usuario 1",
+    "usuario2":"descripcion del usuario 2",
+    "usuario3":"descripcion del usuario 3",
+    "usuario4":"descripcion del usuario 4",
+    "sugerencias":"Sugerencias",
+    "contenido_sugerencia":"Contenido de sugerencias",
+    "escribenos":"Comentanos",
+    "nombre":"nombre",
+    "correo":"correo",
+    "texto":"Escribe aqui tu descripcion"
+  },
+  "login":{
+    "titulo":"La plataforma es gratuita",
+    "contenido":"Una nueva forma de manejar tus encuestas",
+    "description":"Registra tu primera pregunta"
+  },
+  "footer":{
+    "titulo":"Advertencia",
+    "contenido":"Contenido del footer",
+    "informacion":"Informacion de la plataforma",
+    "telefono":"telefono",
+    "universidad":"universidad",
+    "pais": "pais",
+    "ciudad":"ciudad"
+  },
+  "iconos":{
+    "logintwitter": "CONECTATE CON TWITTER",
+    "loginGoogle": "CONECTATE CON GOOGLE",
+    "loginGithub": "CONECTATE CON GITHUB"
+  },
+  "no-encontrado":{
+    "titulo": "No existe la pagina solicitada",
+    "descripcion":"Lo lamentamos, pero el recurso solicitado no existe",
+    "enlace": "Ir al inicio de la pagina"
+  },
+  "no-disponible":{
+    "titulo": "Tenemos problemas con nuestros servidores en este momento",
+    "descripcion": "Lo lamentamos pero en estos momentos tenemos problemas con nuestro servidor",
+    "enlace":"Ir al inicio de la pagina"
+  }
+}
