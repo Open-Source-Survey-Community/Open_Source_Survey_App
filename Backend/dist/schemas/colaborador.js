@@ -1,0 +1,10 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var Colaborador = "\n\ttype Colaborador {\n\t\t_id: ID!\n\t\trol: String\n\t\tusuarioColaborador: Usuario\n\t}\t\n\ttype Query {\n\t  \tgetColaboradorUsuario(id: String, idColaborador: String): Colaborador\n\t\tcargarListaColaboradoresUsuario(id: String): [Colaborador]\n\t\tgetNumeroColaboradoresUsuario(id: String): Int\n\t  \n\t}\n\t\t\n\ttype Mutation {\n\t\teditarRolColaboradorUsuario(id:String, idColaborador: String, rol: String): Boolean\n\t\taddColaboradorUsuario(id: String, idColaborador: String ): [Colaborador]\n\t\teliminarUsuarioColaborador(id: String, idColaborador: String): Boolean\n\t}\n";
+
+exports.default = Colaborador;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NjaGVtYXMvY29sYWJvcmFkb3IuanMiXSwibmFtZXMiOlsiQ29sYWJvcmFkb3IiXSwibWFwcGluZ3MiOiI7Ozs7OztBQUNBLElBQU1BLDRsQkFBTjs7a0JBb0JnQkEsVyIsImZpbGUiOiJjb2xhYm9yYWRvci5qcyIsInNvdXJjZXNDb250ZW50IjpbIlxuY29uc3QgQ29sYWJvcmFkb3IgPSBgXG5cdHR5cGUgQ29sYWJvcmFkb3Ige1xuXHRcdF9pZDogSUQhXG5cdFx0cm9sOiBTdHJpbmdcblx0XHR1c3VhcmlvQ29sYWJvcmFkb3I6IFVzdWFyaW9cblx0fVx0XG5cdHR5cGUgUXVlcnkge1xuXHQgIFx0Z2V0Q29sYWJvcmFkb3JVc3VhcmlvKGlkOiBTdHJpbmcsIGlkQ29sYWJvcmFkb3I6IFN0cmluZyk6IENvbGFib3JhZG9yXG5cdFx0Y2FyZ2FyTGlzdGFDb2xhYm9yYWRvcmVzVXN1YXJpbyhpZDogU3RyaW5nKTogW0NvbGFib3JhZG9yXVxuXHRcdGdldE51bWVyb0NvbGFib3JhZG9yZXNVc3VhcmlvKGlkOiBTdHJpbmcpOiBJbnRcblx0ICBcblx0fVxuXHRcdFxuXHR0eXBlIE11dGF0aW9uIHtcblx0XHRlZGl0YXJSb2xDb2xhYm9yYWRvclVzdWFyaW8oaWQ6U3RyaW5nLCBpZENvbGFib3JhZG9yOiBTdHJpbmcsIHJvbDogU3RyaW5nKTogQm9vbGVhblxuXHRcdGFkZENvbGFib3JhZG9yVXN1YXJpbyhpZDogU3RyaW5nLCBpZENvbGFib3JhZG9yOiBTdHJpbmcgKTogW0NvbGFib3JhZG9yXVxuXHRcdGVsaW1pbmFyVXN1YXJpb0NvbGFib3JhZG9yKGlkOiBTdHJpbmcsIGlkQ29sYWJvcmFkb3I6IFN0cmluZyk6IEJvb2xlYW5cblx0fVxuYDtcblxuZXhwb3J0ICBkZWZhdWx0IENvbGFib3JhZG9yO1xuIl19

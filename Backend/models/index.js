@@ -8,6 +8,7 @@ import Pregunta from "./Preguntas";
 import Comentario from "./Comentarios";
 import preguntasValidas from "./preguntasValidadas";
 import areasConocimiento from "./AreaConocimiento";
+import etiquetaCorrecciones from "./EtiquetasCorrecciones";
 
 export default {
 	User,
@@ -19,5 +20,6 @@ export default {
 	Encuesta,
 	Pregunta,
 	Comentario,
-	preguntasValidas
+	preguntasValidas,
+	etiquetaCorrecciones
 };
