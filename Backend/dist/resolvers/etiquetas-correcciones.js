@@ -59,6 +59,38 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
+		},
+		eliminarEtiquetaCorreccionPregunta: function eliminarEtiquetaCorreccionPregunta(parent, args, _ref3) {
+			var models = _ref3.models;
+
+			return models.etiquetaCorrecciones.findById(args.idEtiquetaCorreccion, "usuariopropietario").populate("usuariopropietario").then(function (documentoEtiquetaCorreccion) {
+				if (documentoEtiquetaCorreccion.usuariopropietario.correo === args.correoUsuario) {
+					return models.discusionPregunta.count({ etiquetas_correcciones: args.idEtiquetaCorreccion,
+						habilitada: true }).then(function (numeroDiscusionesPreguntas) {
+						if (numeroDiscusionesPreguntas > 0) {
+							throw new Error("you can't edit this tag, because other users are using the same tag");
+						} else {
+							return models.etiquetaCorrecciones.findByIdAndRemove(args.idEtiquetaCorreccion).then(function (etiquetaCorreccionEditada) {
+								return etiquetaCorreccionEditada;
+							}).catch(function (error) {
+								if (error) {
+									throw new Error(error);
+								}
+							});
+						}
+					}).catch(function (error) {
+						if (error) {
+							throw new Error(error);
+						}
+					});
+				} else {
+					throw new Error("you can't edit this tag because you are not the owner");
+				}
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
 		}
 
 	}

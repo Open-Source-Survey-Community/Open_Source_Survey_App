@@ -195,7 +195,7 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" +
 						}		
 				}`,
 				variables: {
-					idEtiquetaCorreccion: "5ad26cb6dc13797289371c80",
+					idEtiquetaCorreccion: "5ad27ad1604bc47d9d775f7e",
 					color: "#FAAASS",
 					descripcion: "otra descripcion",
 					etiqueta: "etiqueta de ejemplo",
@@ -269,4 +269,79 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" +
 			});
 		
 	});
+	it("Deberia no poder eliminar una etiqueta de correccion ya que otros " +
+		"usuarios la estan usando ", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation eliminarEtiquetaCorrecciontoPregunta($idEtiquetaCorreccion: String, 
+																	$correoUsuario: String){
+						eliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion,
+															correoUsuario: $correoUsuario){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					idEtiquetaCorreccion: "5ad224fcd47c4b51302491ce",
+					correoUsuario: "kevinandresortizmerchan111@gmail.com"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't edit this tag, because other users are using the same tag/);
+				done();
+			});
+
+	});
+	it("Deberia no poder eliminar una etiqueta que no he creado ", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation eliminarEtiquetaCorreccionPregunta($idEtiquetaCorreccion: String,
+																	$correoUsuario: String){
+						eliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion,
+															correoUsuario: $correoUsuario){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					idEtiquetaCorreccion: "5ad26cb6dc13797289371c80",
+					correoUsuario: "kevinandresortizmerchan456@gmail.com"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't edit this tag because you are not the owner/);
+				done();
+			});
+
+	});
+	it("Deberia poder eliminar una etiqueta que he creado, pero nadie ha usado  ", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation eliminarEtiquetaCorreccionPregunta($idEtiquetaCorreccion: String,
+																	$correoUsuario: String){
+						eliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion,
+															correoUsuario: $correoUsuario){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					idEtiquetaCorreccion: "5ad27ad1604bc47d9d775f7e",
+					correoUsuario: "kevinandresortizmerchan111@gmail.com"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.eliminarEtiquetaCorreccionPregunta.etiqueta).toMatch(/etiqueta de ejemplo/);
+				done();
+			});
+
+	});
+
+
 });

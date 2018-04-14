@@ -137,7 +137,7 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 		self.test(JSON.stringify({
 			query: "mutation editarEtiquetaCorrecciontoPregunta($idEtiquetaCorreccion: String, $color: String,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$descripcion: String, $etiqueta: String,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$correoUsuario: String){\n\t\t\t\t\t\teditarEtiquetaCorrecciontoPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion, color: $color,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tdescripcion: $descripcion, etiqueta: $etiqueta,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tcorreoUsuario: $correoUsuario){\n\t\t\t\t\t\t\tcolor\n\t\t\t\t\t\t\tetiqueta\t\t\n\t\t\t\t\t\t}\t\t\n\t\t\t\t}",
 			variables: {
-				idEtiquetaCorreccion: "5ad26cb6dc13797289371c80",
+				idEtiquetaCorreccion: "5ad27ad1604bc47d9d775f7e",
 				color: "#FAAASS",
 				descripcion: "otra descripcion",
 				etiqueta: "etiqueta de ejemplo",
@@ -181,6 +181,48 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 			expect(response.status).toBe(200);
 			expect(response.success).toBe(false);
 			expect(response.errors[0].message).toMatch(/you can't edit this tag, because other users are using the same tag/);
+			done();
+		});
+	});
+	it("Deberia no poder eliminar una etiqueta de correccion ya que otros " + "usuarios la estan usando ", function (done) {
+		self.test(JSON.stringify({
+			query: "mutation eliminarEtiquetaCorrecciontoPregunta($idEtiquetaCorreccion: String, \n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$correoUsuario: String){\n\t\t\t\t\t\teliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tcorreoUsuario: $correoUsuario){\n\t\t\t\t\t\t\tcolor\n\t\t\t\t\t\t\tetiqueta\t\t\n\t\t\t\t\t\t}\t\t\n\t\t\t\t}",
+			variables: {
+				idEtiquetaCorreccion: "5ad224fcd47c4b51302491ce",
+				correoUsuario: "kevinandresortizmerchan111@gmail.com"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(false);
+			expect(response.errors[0].message).toMatch(/you can't edit this tag, because other users are using the same tag/);
+			done();
+		});
+	});
+	it("Deberia no poder eliminar una etiqueta que no he creado ", function (done) {
+		self.test(JSON.stringify({
+			query: "mutation eliminarEtiquetaCorreccionPregunta($idEtiquetaCorreccion: String,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$correoUsuario: String){\n\t\t\t\t\t\teliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tcorreoUsuario: $correoUsuario){\n\t\t\t\t\t\t\tcolor\n\t\t\t\t\t\t\tetiqueta\t\t\n\t\t\t\t\t\t}\t\t\n\t\t\t\t}",
+			variables: {
+				idEtiquetaCorreccion: "5ad26cb6dc13797289371c80",
+				correoUsuario: "kevinandresortizmerchan456@gmail.com"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(false);
+			expect(response.errors[0].message).toMatch(/you can't edit this tag because you are not the owner/);
+			done();
+		});
+	});
+	it("Deberia poder eliminar una etiqueta que he creado, pero nadie ha usado  ", function (done) {
+		self.test(JSON.stringify({
+			query: "mutation eliminarEtiquetaCorreccionPregunta($idEtiquetaCorreccion: String,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t$correoUsuario: String){\n\t\t\t\t\t\teliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion,\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tcorreoUsuario: $correoUsuario){\n\t\t\t\t\t\t\tcolor\n\t\t\t\t\t\t\tetiqueta\t\t\n\t\t\t\t\t\t}\t\t\n\t\t\t\t}",
+			variables: {
+				idEtiquetaCorreccion: "5ad27ad1604bc47d9d775f7e",
+				correoUsuario: "kevinandresortizmerchan111@gmail.com"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.eliminarEtiquetaCorreccionPregunta.etiqueta).toMatch(/etiqueta de ejemplo/);
 			done();
 		});
 	});
