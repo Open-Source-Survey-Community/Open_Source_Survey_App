@@ -34,18 +34,11 @@ const EtiquetasCorrecciones = `
 		## si algun otro usuario esta usando dicha etiqueta
 		## las edicion se ha hace sobre el modelo de Discusion de Pregunta									
 		editarEtiquetaCorrecciontoPregunta(idEtiquetaCorreccion: String, color: String, descripcion: String,
-											etiqueta: String, correoUsuario: String,
-											idDiscusionPregunta: String): EtiquetaCorrecciones
-		## las edicion se ha hace sobre el modelo de Discusion de Encuesta
-		editarEtiquetaCorrecciontoEncuesta(idEtiquetaCorreccion: String, color: String, descripcion: String,
-											etiqueta: String, correoUsuario: String,
-											idDiscusionEncuesta: String): EtiquetaCorrecciones
-											
+											etiqueta: String, correoUsuario: String): EtiquetaCorrecciones
 		## elimina una etiqueta de correccion, solamente si soy el creador de dicha etiqueta
 		## solamente puedo eliminar si nadie mas esta usando esa etiqueta en una Pregunta
 		eliminarEtiquetaCorreccionPregunta(idEtiquetaCorreccion: String, correoUsuario: String): EtiquetaCorrecciones
-		## solamente puedo eliminar si nadie mas esta usando esa etiqueta en una Encuesta
-		eliminarEtiquetaCorreccionEncuesta(idEtiquetaCorreccion: String, correoUsuario: String): EtiquetaCorrecciones
+	
 	}
 
 

@@ -153,4 +153,120 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" +
 
 			});
 	});
+	it("Deberia poder crear una nueva etiqueta_correccion de preguntas que nadie ha usado", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation crearNuevaEtiquetaCorrecciones($etiqueta: etiquetaCorreccionesInput!){
+						crearNuevaEtiquetaCorrecciones(etiqueta: $etiqueta){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					etiqueta: {
+						usuariopropietario: "5ac248c98a3f74223f16895e",
+						idioma: "en",
+						color: "#FFFECA",
+						descripcion: "esta es otra nueva etiqueta de ejemplo que se ha creado",
+						etiqueta: "pregunta muy extensa y confusa",
+						categoria: "pregunta"
+
+					}
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.crearNuevaEtiquetaCorrecciones.etiqueta).toMatch(/pregunta muy extensa y confusa/);
+				done();
+			});
+	});
+	it("Deberia poder editar una etiqueta que he creado, pero nadie ha usado  ", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarEtiquetaCorrecciontoPregunta($idEtiquetaCorreccion: String, $color: String,
+																	$descripcion: String, $etiqueta: String,
+																	$correoUsuario: String){
+						editarEtiquetaCorrecciontoPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion, color: $color,
+															descripcion: $descripcion, etiqueta: $etiqueta,
+															correoUsuario: $correoUsuario){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					idEtiquetaCorreccion: "5ad26cb6dc13797289371c80",
+					color: "#FAAASS",
+					descripcion: "otra descripcion",
+					etiqueta: "etiqueta de ejemplo",
+					correoUsuario: "kevinandresortizmerchan111@gmail.com"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.editarEtiquetaCorrecciontoPregunta.etiqueta).toMatch(/etiqueta de ejemplo/);
+				done();
+			});
+		
+	});
+	it("Deberia no poder editar una etiqueta que no he creado ", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarEtiquetaCorrecciontoPregunta($idEtiquetaCorreccion: String, $color: String,
+																	$descripcion: String, $etiqueta: String,
+																	$correoUsuario: String){
+						editarEtiquetaCorrecciontoPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion, color: $color,
+															descripcion: $descripcion, etiqueta: $etiqueta,
+															correoUsuario: $correoUsuario){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					idEtiquetaCorreccion: "5ad26cb6dc13797289371c80",
+					color: "#FAAASS",
+					descripcion: "otra descripcion",
+					etiqueta: "etiqueta de ejemplo",
+					correoUsuario: "kevinandresortizmerchan@gmail.com"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't edit this tag because you are not the owner/);
+				done();
+			});
+		
+	});
+	it("Deberia no poder editar una etiqueta de correccion ya que otros " +
+		"usuarios la estan usando ", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarEtiquetaCorrecciontoPregunta($idEtiquetaCorreccion: String, $color: String,
+																	$descripcion: String, $etiqueta: String,
+																	$correoUsuario: String){
+						editarEtiquetaCorrecciontoPregunta(idEtiquetaCorreccion: $idEtiquetaCorreccion, color: $color,
+															descripcion: $descripcion, etiqueta: $etiqueta,
+															correoUsuario: $correoUsuario){
+							color
+							etiqueta		
+						}		
+				}`,
+				variables: {
+					idEtiquetaCorreccion: "5ad224fcd47c4b51302491ce",
+					color: "#FAAASS",
+					descripcion: "otra descripcion",
+					etiqueta: "etiqueta de ejemplo",
+					correoUsuario: "kevinandresortizmerchan111@gmail.com"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't edit this tag, because other users are using the same tag/);
+				done();
+			});
+		
+	});
 });
