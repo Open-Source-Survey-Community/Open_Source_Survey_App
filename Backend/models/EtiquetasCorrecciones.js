@@ -9,7 +9,8 @@ const etiquetasCorreccionesSchema = new Schema({
 	idioma: String,
 	color: String,
 	descripcion: String,
-	etiqueta:String
+	etiqueta:String,
+	categoria: String
 });
 
 etiquetasCorreccionesSchema.index({"etiqueta":"text"});

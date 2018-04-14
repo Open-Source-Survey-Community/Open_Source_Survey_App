@@ -1,10 +1,12 @@
 const EtiquetasCorrecciones = `
 	type EtiquetaCorrecciones {
+		_id: ID!
 		usuariopropietario: Usuario
 		idioma: String
 		color: String
 		descripcion: String
 		etiqueta: String
+		categoria: String
 	}
 	
 	
@@ -22,27 +24,22 @@ const EtiquetasCorrecciones = `
 		color: String!
 		descripcion: String
 		etiqueta: String!
+		categoria: String
 	}
 
 	type Mutation {
 		## Crea una nueva etiqueta de correccion.(este procedimiento es general ) 
 		crearNuevaEtiquetaCorrecciones(etiqueta: etiquetaCorreccionesInput!): EtiquetaCorrecciones
-		## agrega una nueva etiqueta de correccion a una pregunta 
-		addEtiquetaCorreccionToPregunta(idPregunta: String, correoUsuarioPropietarioPregunta: String, 
-										idEtiquetaCorreccion: String): EtiquetaCorrecciones
-		## agrega una nueva etiqueta de correccion a una encuesta
-		addEtiquetaCorreccionToEncuesta(idPregunta: String, correoUsuarioPropietarioEncuesta: String,
-										idEtiquetaCorreccion: String): EtiquetaCorrecciones
 		## edita una etiqueta de correccion, pero se debe verificar si soy propietario de dicha etiqueta
 		## si algun otro usuario esta usando dicha etiqueta
 		## las edicion se ha hace sobre el modelo de Discusion de Pregunta									
 		editarEtiquetaCorrecciontoPregunta(idEtiquetaCorreccion: String, color: String, descripcion: String,
 											etiqueta: String, correoUsuario: String,
-											idPregunta: String): EtiquetaCorrecciones
+											idDiscusionPregunta: String): EtiquetaCorrecciones
 		## las edicion se ha hace sobre el modelo de Discusion de Encuesta
 		editarEtiquetaCorrecciontoEncuesta(idEtiquetaCorreccion: String, color: String, descripcion: String,
 											etiqueta: String, correoUsuario: String,
-											idEncuesta: String): EtiquetaCorrecciones
+											idDiscusionEncuesta: String): EtiquetaCorrecciones
 											
 		## elimina una etiqueta de correccion, solamente si soy el creador de dicha etiqueta
 		## solamente puedo eliminar si nadie mas esta usando esa etiqueta en una Pregunta

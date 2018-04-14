@@ -19,7 +19,9 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 					idioma: "en",
 					color: "#FFFECA",
 					descripcion: "es una etiqueta de ejemplo",
-					etiqueta: "pregunta muy extensa"
+					etiqueta: "pregunta muy extensa",
+					categoria: "pregunta"
+
 				}
 			}
 		})).then(function (response) {
@@ -39,7 +41,8 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 					idioma: "en",
 					color: "#FFFECA",
 					descripcion: "es otra etiqueta de ejemplo",
-					etiqueta: "pregunta repetida"
+					etiqueta: "pregunta repetida",
+					categoria: "pregunta"
 				}
 			}
 		})).then(function (response) {
@@ -59,7 +62,8 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 					idioma: "en",
 					color: "#FFFECA",
 					descripcion: "es otra etiqueta de ejemplo",
-					etiqueta: "pregunta repetida"
+					etiqueta: "pregunta repetida",
+					categoria: "pregunta"
 				}
 			}
 		})).then(function (response) {
@@ -77,7 +81,9 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 					idioma: "en",
 					color: "#FFFECA",
 					descripcion: "es otra etiqueta de ejemplo",
-					etiqueta: "Pregunta Repetida"
+					etiqueta: "Pregunta Repetida",
+					categoria: "pregunta"
+
 				}
 			}
 		})).then(function (response) {
@@ -95,7 +101,8 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 					idioma: "en",
 					color: "#FFFECA",
 					descripcion: "es otra etiqueta de ejemplo",
-					etiqueta: "Pregunta Repetida de encuesta"
+					etiqueta: "Pregunta Repetida de encuesta",
+					categoria: "pregunta"
 				}
 			}
 		})).then(function (response) {

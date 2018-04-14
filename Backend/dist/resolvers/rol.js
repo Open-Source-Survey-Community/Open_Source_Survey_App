@@ -8,7 +8,7 @@ exports.default = {
 		verRolUsuario: function verRolUsuario(parent, args, _ref) {
 			var models = _ref.models;
 
-			models.User.findById(args.id).then(function (usuario) {
+			return models.User.findById(args.id).then(function (usuario) {
 				var rol = {
 					_id: usuario._id,
 					rol: usuario.roles[0].rol,
@@ -25,7 +25,7 @@ exports.default = {
 		editarRolUsuario: function editarRolUsuario(parent, args, _ref2) {
 			var models = _ref2.models;
 
-			models.User.findByIdAndUpdate(args.id, { $set: { "roles.0.rol": args.rol, "roles.0.Acciones": args.acciones } }, { upsert: true, new: true }).then(function (usuario) {
+			return models.User.findByIdAndUpdate(args.id, { $set: { "roles.0.rol": args.rol, "roles.0.Acciones": args.acciones } }, { upsert: true, new: true }).then(function (usuario) {
 				return usuario.roles;
 			}).catch(function (error) {
 				if (error) {

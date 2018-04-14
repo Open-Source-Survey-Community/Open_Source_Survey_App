@@ -2,33 +2,49 @@
 
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var pagination = require("mongoose-paginate");
 
 var discusionPreguntaSchema = new Schema({
 	titulo: String,
+	identificador: {
+		type: Number,
+		default: 1
+	},
+	etiquetas_correcciones: [{
+		type: Schema.Types.ObjectId,
+		ref: "etiqueta-correcciones"
+	}],
 	descripcion: String,
-	creador_ID: { type: String },
-	etiquetas: [{
-		type: String
-	}],
-	estados: [{
-		usuario_ID: {
-			type: String
+	tipo_correccion: [String],
+	creador_correccion: {
+		type: Schema.Types.ObjectId,
+		ref: "usuario"
+	},
+	estado_correccion: [{
+		usuario_creador_estado: {
+			type: Schema.Types.ObjectId,
+			ref: "usuario"
 		},
-		texto: {
-			type: String
-		}
+		rol: String,
+		asignacion: String,
+		observacion: { type: String, default: "any observation was registered" }
 	}],
-	fecha_creacion: String,
-	fecha_cierre: String,
+	fecha_creacion: { type: Date, index: true },
+	fecha_cierre: { type: Date, index: true },
 	comentarios: [{
 		type: Schema.Types.ObjectId,
 		ref: "comentario"
 	}],
-	pregunta_ID: String
+	pregunta_ID: {
+		type: Schema.Types.ObjectId,
+		ref: "pregunta"
+	},
+	habilitada: {
+		type: Boolean, default: true
+	}
 });
 
+discusionPreguntaSchema.index({ "titulo": "text" });
 var discusionPregunta = mongoose.model("discusionPregunta", discusionPreguntaSchema);
 
 module.exports = discusionPregunta;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL21vZGVscy9kaXNjdXNpb25lc1ByZWd1dGFzLmpzIl0sIm5hbWVzIjpbIm1vbmdvb3NlIiwicmVxdWlyZSIsIlNjaGVtYSIsInBhZ2luYXRpb24iLCJkaXNjdXNpb25QcmVndW50YVNjaGVtYSIsInRpdHVsbyIsIlN0cmluZyIsImRlc2NyaXBjaW9uIiwiY3JlYWRvcl9JRCIsInR5cGUiLCJldGlxdWV0YXMiLCJlc3RhZG9zIiwidXN1YXJpb19JRCIsInRleHRvIiwiZmVjaGFfY3JlYWNpb24iLCJmZWNoYV9jaWVycmUiLCJjb21lbnRhcmlvcyIsIlR5cGVzIiwiT2JqZWN0SWQiLCJyZWYiLCJwcmVndW50YV9JRCIsImRpc2N1c2lvblByZWd1bnRhIiwibW9kZWwiLCJtb2R1bGUiLCJleHBvcnRzIl0sIm1hcHBpbmdzIjoiOztBQUFBLElBQU1BLFdBQVdDLFFBQVEsVUFBUixDQUFqQjtBQUNBLElBQU1DLFNBQVNGLFNBQVNFLE1BQXhCO0FBQ0EsSUFBTUMsYUFBYUYsUUFBUSxtQkFBUixDQUFuQjs7QUFHQSxJQUFNRywwQkFBMEIsSUFBSUYsTUFBSixDQUFXO0FBQzFDRyxTQUFPQyxNQURtQztBQUUxQ0MsY0FBWUQsTUFGOEI7QUFHMUNFLGFBQVcsRUFBQ0MsTUFBTUgsTUFBUCxFQUgrQjtBQUkxQ0ksWUFBVSxDQUFDO0FBQ1ZELFFBQU1IO0FBREksRUFBRCxDQUpnQztBQU8xQ0ssVUFBUSxDQUFDO0FBQ1JDLGNBQVc7QUFDVkgsU0FBS0g7QUFESyxHQURIO0FBSVJPLFNBQU07QUFDTEosU0FBS0g7QUFEQTtBQUpFLEVBQUQsQ0FQa0M7QUFlMUNRLGlCQUFlUixNQWYyQjtBQWdCMUNTLGVBQWFULE1BaEI2QjtBQWlCMUNVLGNBQVksQ0FBQztBQUNaUCxRQUFLUCxPQUFPZSxLQUFQLENBQWFDLFFBRE47QUFFWkMsT0FBSTtBQUZRLEVBQUQsQ0FqQjhCO0FBcUIxQ0MsY0FBWWQ7QUFyQjhCLENBQVgsQ0FBaEM7O0FBMEJBLElBQU1lLG9CQUFvQnJCLFNBQVNzQixLQUFULENBQWUsbUJBQWYsRUFBbUNsQix1QkFBbkMsQ0FBMUI7O0FBRUFtQixPQUFPQyxPQUFQLEdBQWlCSCxpQkFBakIiLCJmaWxlIjoiZGlzY3VzaW9uZXNQcmVndXRhcy5qcyIsInNvdXJjZXNDb250ZW50IjpbImNvbnN0IG1vbmdvb3NlID0gcmVxdWlyZShcIm1vbmdvb3NlXCIpO1xuY29uc3QgU2NoZW1hID0gbW9uZ29vc2UuU2NoZW1hO1xuY29uc3QgcGFnaW5hdGlvbiA9IHJlcXVpcmUoXCJtb25nb29zZS1wYWdpbmF0ZVwiKTtcblxuXG5jb25zdCBkaXNjdXNpb25QcmVndW50YVNjaGVtYSA9IG5ldyBTY2hlbWEoe1xuXHR0aXR1bG86U3RyaW5nLFxuXHRkZXNjcmlwY2lvbjpTdHJpbmcsXG5cdGNyZWFkb3JfSUQ6e3R5cGU6IFN0cmluZ30sXG5cdGV0aXF1ZXRhczpbe1xuXHRcdHR5cGU6IFN0cmluZ1xuXHR9XSxcblx0ZXN0YWRvczpbe1xuXHRcdHVzdWFyaW9fSUQ6e1xuXHRcdFx0dHlwZTpTdHJpbmdcblx0XHR9LFxuXHRcdHRleHRvOntcblx0XHRcdHR5cGU6U3RyaW5nXG5cdFx0fVxuXHR9XSxcblx0ZmVjaGFfY3JlYWNpb246U3RyaW5nLFxuXHRmZWNoYV9jaWVycmU6U3RyaW5nLFxuXHRjb21lbnRhcmlvczpbe1xuXHRcdHR5cGU6U2NoZW1hLlR5cGVzLk9iamVjdElkLFxuXHRcdHJlZjpcImNvbWVudGFyaW9cIlxuXHR9XSxcblx0cHJlZ3VudGFfSUQ6U3RyaW5nXG59KTtcblxuXG5cbmNvbnN0IGRpc2N1c2lvblByZWd1bnRhID0gbW9uZ29vc2UubW9kZWwoXCJkaXNjdXNpb25QcmVndW50YVwiLGRpc2N1c2lvblByZWd1bnRhU2NoZW1hKTtcblxubW9kdWxlLmV4cG9ydHMgPSBkaXNjdXNpb25QcmVndW50YTtcbiJdfQ==
+//# sourceMappingURL=discusionesPregutas.js.map
