@@ -110,8 +110,32 @@ export default {
 						throw new Error(error);
 					}
 				});
-		}
+		},
+		editarMyDiscusionPreguntaByDescripcion: (parent, args, {models}) => {
+			return models.discusionPregunta.findById(args.idDiscusionPregunta, "creador_correccion")
+				.populate("creador_correccion")
+				.then(correccionPregunta => {
+					if (correccionPregunta.creador_correccion.correo === args.correoUsuario) {
+						return models.discusionPregunta.findByIdAndUpdate(args.idDiscusionPregunta,
+							{$set: {descripcion: args.descripcion}},{new: true})
+							.then(correccionPreguntaActualizada => {
+								return correccionPreguntaActualizada;
+							}).catch(error => {
+								if (error) {
+									throw new Error(error);
+								}
 
+							});
+					}else {
+						throw new Error("this question issue you can not edit, because you are not the owner");
+					}
+
+				}).catch(error => {
+					if (error) {
+						throw new Error(error);
+					}
+				});
+		}
 	}
 
 };

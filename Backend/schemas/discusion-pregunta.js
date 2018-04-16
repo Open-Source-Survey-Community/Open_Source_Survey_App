@@ -59,6 +59,9 @@ const DiscusionPregunta = `
 		##Esta accion indica que un usuario creador de una discusion, puede editar de manera rapida el titulo
 		editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: String!, correoUsuario: String!, titulo: String): DiscusionPregunta
 	
+		##Esta accion indica que un usuario creador de una discusion, puede editar de manera rapida, la descripcion de una pregunta
+		editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: String!, correoUsuario: String!, descripcion: String): DiscusionPregunta
+		
 	}
 	
 

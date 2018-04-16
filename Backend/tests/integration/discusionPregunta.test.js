@@ -277,6 +277,50 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+	it("deberia poder editar la descripcion de  una discusion de pregunta, en el cual soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByDescripcion($idDiscusionPregunta: String!,$correoUsuario: String!, $descripcion: String){
+							editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, descripcion: $descripcion){
+							 	descripcion
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					descripcion: "descripcion utilizada por ejemplo"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.editarMyDiscusionPreguntaByDescripcion.descripcion).toMatch(/descripcion utilizada por ejemplo/);
+				done();
+			});
+	});
+	it("deberia no poder editar la descripcion de  una discusion de pregunta, en el cual no soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByDescripcion($idDiscusionPregunta: String!,$correoUsuario: String!, $descripcion: String){
+							editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, descripcion: $descripcion){
+							 	descripcion
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan111@gmail.com",
+					descripcion: "descripcion utilizada por ejemplo"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/this question issue you can not edit, because you are not the owner/);
+				done();
+			});
+	});
 
 
 });
