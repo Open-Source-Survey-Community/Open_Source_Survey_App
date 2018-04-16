@@ -50,6 +50,24 @@ export default {
 					}
 				});
 
+		},
+		editarDiscusionPregunta: (parent, args, {models}) => {
+			return models.discusionPregunta.update({_id: args.idDiscusionPregunta, creador_correccion: args.discusionPregunta.creador_correccion },
+				args.discusionPregunta)
+				.then(documentoAfectado => {
+					if (documentoAfectado.n){
+						return true;
+
+					}else{
+						throw new Error("This user can't edit this question, because he is not the owner");
+					}
+
+				}).catch(error => {
+					if (error){
+						throw new  Error(error);
+					}
+				});
+
 		}
 
 	}

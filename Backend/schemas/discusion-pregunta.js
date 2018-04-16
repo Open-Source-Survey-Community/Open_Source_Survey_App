@@ -46,6 +46,10 @@ const DiscusionPregunta = `
 		## crea una nueva discusion de una Pregunta  
 		nuevaDiscusionPregunta(discusionPregunta: discusionPreguntaInput): DiscusionPregunta
 	
+		## editar una discusion que  ha sido previamente creada
+		## esta operacion solamente puede ser efectuada por el creador de la discusion
+		editarDiscusionPregunta(idDiscusionPregunta: String!, discusionPregunta: discusionPreguntaInput): Boolean
+		
 	
 	
 	}

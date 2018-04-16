@@ -126,4 +126,74 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+	it("deberia poder editar una discusion de pregunta, en el cual soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarDiscusionPregunta($idDiscusionPregunta: String!,$discusionPregunta: discusionPreguntaInput){
+							editarDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta,discusionPregunta: $discusionPregunta)
+				
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					discusionPregunta:{
+						titulo: "mi segunda editada de discusion de pregunta",
+						etiquetas_correcciones: ["5ad224fcd47c4b51302491ce","5ad224fcd47c4b51302491cf"],
+						descripcion: "esta es una discusion editada ",
+						tipo_correccion: ["descripcion","contenido_multimedia","respuestas"],
+						creador_correccion:"5ac24c758e4a6a23d4869ac7",
+						estado_correccion:{
+							usuario_creador_estado: "5ac24c758e4a6a23d4869ac7",
+							rol: "usuario",
+							asignacion: "editado",
+							observacion:"discusion editada"
+						},
+						fecha_creacion: new Date(),
+						pregunta_ID: "5acde1c58cdf5a5284349713"
+					}
+				}
+
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.editarDiscusionPregunta).toBe(true);
+				done();
+			});
+	});
+	it("deberia no poder editar una discusion de pregunta, en el cual no soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarDiscusionPregunta($idDiscusionPregunta: String!,$discusionPregunta: discusionPreguntaInput){
+							editarDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta,discusionPregunta: $discusionPregunta)
+				
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					discusionPregunta:{
+						titulo: "mi segunda editada de discusion de pregunta",
+						etiquetas_correcciones: ["5ad224fcd47c4b51302491ce","5ad224fcd47c4b51302491cf"],
+						descripcion: "esta es una discusion editada ",
+						tipo_correccion: ["descripcion","contenido_multimedia","respuestas"],
+						creador_correccion:"5ac24c758e4a6a23d4969ac7",
+						estado_correccion:{
+							usuario_creador_estado: "5ac24c758e4a6a23d4869ac7",
+							rol: "usuario",
+							asignacion: "editado",
+							observacion:"discusion editada"
+						},
+						fecha_creacion: new Date(),
+						pregunta_ID: "5acde1c58cdf5a5284349713"
+					}
+				}
+
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/This user can't edit this question, because he is not the owner/);
+				done();
+			});
+	});
+
+
 });
