@@ -226,5 +226,54 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 			done();
 		});
 	});
+	it("Deberia poder ver el listado de etiquetas de correcciones por idioma", function (done) {
+		self.test(JSON.stringify({
+			query: "query listadoEtiquetasCorrecciones($idioma: String){\n\t\t\t\t\t\t\t  listadoEtiquetasCorrecciones(idioma: $idioma){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				idioma: "en"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.listadoEtiquetasCorrecciones[0].usuariopropietario.nombre).toMatch(/Kevin/);
+			expect(response.data.listadoEtiquetasCorrecciones.length).toBe(3);
+			done();
+		});
+	});
+	it("Deberia ver un mensaje de error indicando que deberia existir el idioma en que quiero que se carguen " + "las etiquetas", function (done) {
+		self.test(JSON.stringify({
+			query: "query listadoEtiquetasCorrecciones($idioma: String){\n\t\t\t\t\t\t\t  listadoEtiquetasCorrecciones(idioma: $idioma){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				idioma: ""
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(false);
+			expect(response.errors[0].message).toMatch(/is neccessary a lenguage to filter tags/);
+			done();
+		});
+		self.test(JSON.stringify({
+			query: "query listadoEtiquetasCorrecciones($idioma: String){\n\t\t\t\t\t\t\t  listadoEtiquetasCorrecciones(idioma: $idioma){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				idioma: null
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(false);
+			expect(response.errors[0].message).toMatch(/is neccessary a lenguage to filter tags/);
+			done();
+		});
+		self.test(JSON.stringify({
+			query: "query listadoEtiquetasCorrecciones($idioma: String){\n\t\t\t\t\t\t\t  listadoEtiquetasCorrecciones(idioma: $idioma){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				idioma: undefined
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(false);
+			expect(response.errors[0].message).toMatch(/is neccessary a lenguage to filter tags/);
+			done();
+		});
+	});
 });
 //# sourceMappingURL=etiquetascorrecciones.test.js.map

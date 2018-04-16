@@ -13,6 +13,7 @@ const EtiquetasCorrecciones = `
 	type Query {
 	   ## Muestra el listado de etiquetas de correcciones que se han elaborado
 	   listadoEtiquetasCorrecciones(idioma: String): [EtiquetaCorrecciones]
+	   
 	   ## filtra el listado de etiquetas de correcciones por un caracter o varios caracteres que se ingresa
 	   filtrarEtiquetasCorrecciones(idioma: String, caracter: String): [EtiquetaCorrecciones]
 	}

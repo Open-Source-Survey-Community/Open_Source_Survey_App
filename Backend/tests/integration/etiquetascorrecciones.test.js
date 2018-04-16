@@ -342,6 +342,100 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" +
 			});
 
 	});
+	it("Deberia poder ver el listado de etiquetas de correcciones por idioma", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query listadoEtiquetasCorrecciones($idioma: String){
+							  listadoEtiquetasCorrecciones(idioma: $idioma){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					idioma:"en"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.listadoEtiquetasCorrecciones[0].usuariopropietario.nombre).toMatch(/Kevin/);
+				expect(response.data.listadoEtiquetasCorrecciones.length).toBe(3);
+				done();
+			});
+	});
+	it("Deberia ver un mensaje de error indicando que deberia existir el idioma en que quiero que se carguen " +
+		"las etiquetas", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query listadoEtiquetasCorrecciones($idioma: String){
+							  listadoEtiquetasCorrecciones(idioma: $idioma){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					idioma:""
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/is neccessary a lenguage to filter tags/);
+				done();
+			});
+		self
+			.test(JSON.stringify({
+				query: `query listadoEtiquetasCorrecciones($idioma: String){
+							  listadoEtiquetasCorrecciones(idioma: $idioma){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					idioma:null
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/is neccessary a lenguage to filter tags/);
+				done();
+			});
+		self
+			.test(JSON.stringify({
+				query: `query listadoEtiquetasCorrecciones($idioma: String){
+							  listadoEtiquetasCorrecciones(idioma: $idioma){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					idioma:undefined
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/is neccessary a lenguage to filter tags/);
+				done();
+			});
 
+	});
 
 });

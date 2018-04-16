@@ -1,5 +1,22 @@
 export default {
 	Query: {
+		listadoEtiquetasCorrecciones: (parent, args, {models}) =>{
+			if (args.idioma) {
+				return models.etiquetaCorrecciones.find({idioma: args.idioma}).populate("usuariopropietario")
+					.then(documentoEtiquetaCorrecciones => {
+						return documentoEtiquetaCorrecciones;
+
+					}).catch(error => {
+						if (error) {
+							throw new Error(error);
+						}
+					});
+
+			}else {
+				throw new Error("is neccessary a lenguage to filter tags");
+
+			}
+		}
 
 
 	},
