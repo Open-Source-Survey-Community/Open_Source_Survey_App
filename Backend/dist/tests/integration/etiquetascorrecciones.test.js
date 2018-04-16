@@ -275,5 +275,33 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 			done();
 		});
 	});
+	it("Deberia poder ver el listado de todas las etiquetas cuando no ingreso ningun caracter", function (done) {
+		self.test(JSON.stringify({
+			query: "query filtrarEtiquetasCorrecciones($idioma: String, $caracter: String){\n\t\t\t\t\t\t\t  filtrarEtiquetasCorrecciones(idioma: $idioma, caracter: $caracter){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				idioma: "en",
+				caracter: ""
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.filtrarEtiquetasCorrecciones.length).toBe(3);
+			done();
+		});
+	});
+	it("Deberia poder ver el listado de una etiqueta cuando ingreso un caracter", function (done) {
+		self.test(JSON.stringify({
+			query: "query filtrarEtiquetasCorrecciones($idioma: String, $caracter: String){\n\t\t\t\t\t\t\t  filtrarEtiquetasCorrecciones(idioma: $idioma, caracter: $caracter){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				idioma: "en",
+				caracter: "extensa"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.filtrarEtiquetasCorrecciones.length).toBe(1);
+			done();
+		});
+	});
 });
 //# sourceMappingURL=etiquetascorrecciones.test.js.map

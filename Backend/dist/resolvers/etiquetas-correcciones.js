@@ -19,12 +19,23 @@ exports.default = {
 			} else {
 				throw new Error("is neccessary a lenguage to filter tags");
 			}
+		},
+		filtrarEtiquetasCorrecciones: function filtrarEtiquetasCorrecciones(parent, args, _ref2) {
+			var models = _ref2.models;
+
+			return models.etiquetaCorrecciones.find({ idioma: args.idioma, etiqueta: new RegExp(args.caracter, "i") }).populate("usuariopropietario").limit(10).then(function (documento) {
+				return documento;
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
 		}
 
 	},
 	Mutation: {
-		crearNuevaEtiquetaCorrecciones: function crearNuevaEtiquetaCorrecciones(parent, args, _ref2) {
-			var models = _ref2.models;
+		crearNuevaEtiquetaCorrecciones: function crearNuevaEtiquetaCorrecciones(parent, args, _ref3) {
+			var models = _ref3.models;
 
 			return models.etiquetaCorrecciones.findOne({ etiqueta: { $regex: new RegExp(args.etiqueta.etiqueta, "i") } }).then(function (etiqueta) {
 				if (etiqueta) {
@@ -45,8 +56,8 @@ exports.default = {
 				}
 			});
 		},
-		editarEtiquetaCorrecciontoPregunta: function editarEtiquetaCorrecciontoPregunta(parent, args, _ref3) {
-			var models = _ref3.models;
+		editarEtiquetaCorrecciontoPregunta: function editarEtiquetaCorrecciontoPregunta(parent, args, _ref4) {
+			var models = _ref4.models;
 
 			return models.etiquetaCorrecciones.findById(args.idEtiquetaCorreccion, "usuariopropietario").populate("usuariopropietario").then(function (documentoEtiquetaCorreccion) {
 				if (documentoEtiquetaCorreccion.usuariopropietario.correo === args.correoUsuario) {
@@ -77,8 +88,8 @@ exports.default = {
 				}
 			});
 		},
-		eliminarEtiquetaCorreccionPregunta: function eliminarEtiquetaCorreccionPregunta(parent, args, _ref4) {
-			var models = _ref4.models;
+		eliminarEtiquetaCorreccionPregunta: function eliminarEtiquetaCorreccionPregunta(parent, args, _ref5) {
+			var models = _ref5.models;
 
 			return models.etiquetaCorrecciones.findById(args.idEtiquetaCorreccion, "usuariopropietario").populate("usuariopropietario").then(function (documentoEtiquetaCorreccion) {
 				if (documentoEtiquetaCorreccion.usuariopropietario.correo === args.correoUsuario) {

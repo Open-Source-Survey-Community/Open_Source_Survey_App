@@ -16,6 +16,21 @@ export default {
 				throw new Error("is neccessary a lenguage to filter tags");
 
 			}
+		},
+		filtrarEtiquetasCorrecciones: (parent, args, {models}) => {
+			return models.etiquetaCorrecciones.find({idioma: args.idioma, etiqueta: new RegExp(args.caracter, "i")})
+				.populate("usuariopropietario")
+				.limit(10)
+				.then(documento => {
+					return documento;
+
+				}).catch(error => {
+					if (error) {
+						throw new Error(error);
+					}
+
+				});
+
 		}
 
 

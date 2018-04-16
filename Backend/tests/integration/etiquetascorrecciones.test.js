@@ -437,5 +437,57 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" +
 			});
 
 	});
+	it("Deberia poder ver el listado de todas las etiquetas cuando no ingreso ningun caracter", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query filtrarEtiquetasCorrecciones($idioma: String, $caracter: String){
+							  filtrarEtiquetasCorrecciones(idioma: $idioma, caracter: $caracter){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					idioma:"en",
+					caracter: ""
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.filtrarEtiquetasCorrecciones.length).toBe(3);
+				done();
+			});
+
+	});
+	it("Deberia poder ver el listado de una etiqueta cuando ingreso un caracter", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query filtrarEtiquetasCorrecciones($idioma: String, $caracter: String){
+							  filtrarEtiquetasCorrecciones(idioma: $idioma, caracter: $caracter){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					idioma:"en",
+					caracter: "extensa"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.filtrarEtiquetasCorrecciones.length).toBe(1);
+				done();
+			});
+
+	});
 
 });
