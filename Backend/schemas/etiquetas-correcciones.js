@@ -16,6 +16,11 @@ const EtiquetasCorrecciones = `
 	   
 	   ## filtra el listado de etiquetas de correcciones por un caracter o varios caracteres que se ingresa
 	   filtrarEtiquetasCorrecciones(idioma: String, caracter: String): [EtiquetaCorrecciones]
+	   
+	   ## filtrar el listado de etiquetas que un usuario en especifico ha creado,
+	   ## esta consulta se puede usar para cargar de manera paginada cuando se usa en datatable
+	   ## o en vista donde el usuario desea cargar mas contenido
+	   filtrarMyEtiquetasCorrecciones(usuario_ID: String!, limit: Int, caracter: String): [EtiquetaCorrecciones]
 	}
 	
 	

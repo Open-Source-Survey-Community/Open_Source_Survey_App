@@ -303,5 +303,32 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" + "de ne
 			done();
 		});
 	});
+	it("Deberia poder ver los 10 primeras etiquetas que yo he desarrollado, sin ningun filtro", function (done) {
+		self.test(JSON.stringify({
+			query: "query filtrarMyEtiquetasCorrecciones($usuario_ID: String!, $limit: Int){\n\t\t\t\t\t\t\t  filtrarMyEtiquetasCorrecciones(usuario_ID: $usuario_ID, limit: $limit){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				usuario_ID: "5ac248c98a3f74223f16895e",
+				limit: 0
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.filtrarMyEtiquetasCorrecciones.length).toBe(3);
+			done();
+		});
+		self.test(JSON.stringify({
+			query: "query filtrarMyEtiquetasCorrecciones($usuario_ID: String!, $limit: Int, $caracter: String){\n\t\t\t\t\t\t\t  filtrarMyEtiquetasCorrecciones(usuario_ID: $usuario_ID, limit: $limit, caracter: $caracter){\n\t\t\t\t\t\t\t \t\t\t\t\tusuariopropietario {\n\t\t\t\t\t\t\t \t\t\t\t\t\tnombre\n\t\t\t\t\t\t\t \t\t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\t}\n\t\t\t\t\t\t\t \t\t\t\t\tcolor\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				usuario_ID: "5ac248c98a3f74223f16895e",
+				limit: 1,
+				caracter: "extensa"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.filtrarMyEtiquetasCorrecciones.length).toBe(1);
+			done();
+		});
+	});
 });
 //# sourceMappingURL=etiquetascorrecciones.test.js.map

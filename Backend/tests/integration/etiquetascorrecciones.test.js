@@ -489,5 +489,55 @@ describe("Modelo etiquetas de correcciones, aqui se describe la logica" +
 			});
 
 	});
+	it("Deberia poder ver los 10 primeras etiquetas que yo he desarrollado, sin ningun filtro", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query filtrarMyEtiquetasCorrecciones($usuario_ID: String!, $limit: Int){
+							  filtrarMyEtiquetasCorrecciones(usuario_ID: $usuario_ID, limit: $limit){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					usuario_ID:"5ac248c98a3f74223f16895e",
+					limit: 0
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.filtrarMyEtiquetasCorrecciones.length).toBe(3);
+				done();
+			});
+		self
+			.test(JSON.stringify({
+				query: `query filtrarMyEtiquetasCorrecciones($usuario_ID: String!, $limit: Int, $caracter: String){
+							  filtrarMyEtiquetasCorrecciones(usuario_ID: $usuario_ID, limit: $limit, caracter: $caracter){
+							 					usuariopropietario {
+							 						nombre
+							 						correo
+							 					}
+							 					color
+							 					descripcion
+							 				}				
+						}`,
+				variables:{
+					usuario_ID:"5ac248c98a3f74223f16895e",
+					limit: 1,
+					caracter: "extensa"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.filtrarMyEtiquetasCorrecciones.length).toBe(1);
+				done();
+			});
+		
+	});
 
 });

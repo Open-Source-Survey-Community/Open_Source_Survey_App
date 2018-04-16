@@ -30,12 +30,30 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
+		},
+		filtrarMyEtiquetasCorrecciones: function filtrarMyEtiquetasCorrecciones(parent, args, _ref3) {
+			var models = _ref3.models;
+
+			if (!args.limit) {
+				args.limit = 10;
+			} else {
+				args.limit = args.limit * 10;
+			}
+
+			return models.etiquetaCorrecciones.find({ usuariopropietario: args.usuario_ID,
+				etiqueta: new RegExp(args.caracter, "i") }).populate("usuariopropietario").limit(args.limit).then(function (documento) {
+				return documento;
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
 		}
 
 	},
 	Mutation: {
-		crearNuevaEtiquetaCorrecciones: function crearNuevaEtiquetaCorrecciones(parent, args, _ref3) {
-			var models = _ref3.models;
+		crearNuevaEtiquetaCorrecciones: function crearNuevaEtiquetaCorrecciones(parent, args, _ref4) {
+			var models = _ref4.models;
 
 			return models.etiquetaCorrecciones.findOne({ etiqueta: { $regex: new RegExp(args.etiqueta.etiqueta, "i") } }).then(function (etiqueta) {
 				if (etiqueta) {
@@ -56,8 +74,8 @@ exports.default = {
 				}
 			});
 		},
-		editarEtiquetaCorrecciontoPregunta: function editarEtiquetaCorrecciontoPregunta(parent, args, _ref4) {
-			var models = _ref4.models;
+		editarEtiquetaCorrecciontoPregunta: function editarEtiquetaCorrecciontoPregunta(parent, args, _ref5) {
+			var models = _ref5.models;
 
 			return models.etiquetaCorrecciones.findById(args.idEtiquetaCorreccion, "usuariopropietario").populate("usuariopropietario").then(function (documentoEtiquetaCorreccion) {
 				if (documentoEtiquetaCorreccion.usuariopropietario.correo === args.correoUsuario) {
@@ -88,8 +106,8 @@ exports.default = {
 				}
 			});
 		},
-		eliminarEtiquetaCorreccionPregunta: function eliminarEtiquetaCorreccionPregunta(parent, args, _ref5) {
-			var models = _ref5.models;
+		eliminarEtiquetaCorreccionPregunta: function eliminarEtiquetaCorreccionPregunta(parent, args, _ref6) {
+			var models = _ref6.models;
 
 			return models.etiquetaCorrecciones.findById(args.idEtiquetaCorreccion, "usuariopropietario").populate("usuariopropietario").then(function (documentoEtiquetaCorreccion) {
 				if (documentoEtiquetaCorreccion.usuariopropietario.correo === args.correoUsuario) {

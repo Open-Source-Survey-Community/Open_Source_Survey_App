@@ -31,6 +31,29 @@ export default {
 
 				});
 
+		},
+		filtrarMyEtiquetasCorrecciones: (parent, args, {models}) => {
+			if(!args.limit) {
+				args.limit = 10;
+			}else{
+				args.limit = args.limit * 10;
+			}
+
+			return models.etiquetaCorrecciones.find({usuariopropietario: args.usuario_ID,
+				etiqueta: new RegExp(args.caracter, "i")})
+				.populate("usuariopropietario")
+				.limit(args.limit)
+				.then(documento => {
+					return documento;
+
+				}).catch(error => {
+					if (error) {
+						throw new Error(error);
+					}
+
+				});
+
+
 		}
 
 
