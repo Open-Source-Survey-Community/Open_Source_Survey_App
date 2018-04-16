@@ -233,5 +233,50 @@ describe("Modelo de discusion de Pregunta", function(){
 			});
 	});
 
+	it("deberia poder editar el titulo de  una discusion de pregunta, en el cual soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByTitulo($idDiscusionPregunta: String!,$correoUsuario: String!, $titulo: String){
+							editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, titulo: $titulo){
+								titulo
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					titulo: "esta es una discusion editada por kevin Ortiz"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.editarMyDiscusionPreguntaByTitulo.titulo).toMatch(/esta es una discusion editada por kevin Ortiz/);
+				done();
+			});
+	});
+	it("deberia no poder editar el titulo de  una discusion de pregunta, en el cual no soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByTitulo($idDiscusionPregunta: String!,$correoUsuario: String!, $titulo: String){
+							editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, titulo: $titulo){
+								titulo
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan111@gmail.com",
+					titulo: "esta es una discusion editada por kevin Ortiz"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/this question issue you can not edit, because you are not the owner/);
+				done();
+			});
+	});
+
 
 });

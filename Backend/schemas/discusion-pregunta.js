@@ -54,6 +54,10 @@ const DiscusionPregunta = `
 		## Esta accion indica que un usuario decide eliminar una discusion de una pregunta que ha 
 		## desarrollado, de manera previa
 		eliminarDiscusionPregunta(idDiscusionPregunta: String!, creador_correccion: String): Boolean
+		
+		##edicion Rapida de Discusiones de pregunta
+		##Esta accion indica que un usuario creador de una discusion, puede editar de manera rapida el titulo
+		editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: String!, correoUsuario: String!, titulo: String): DiscusionPregunta
 	
 	}
 	
