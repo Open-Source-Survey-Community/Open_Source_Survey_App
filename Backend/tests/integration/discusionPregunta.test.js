@@ -358,6 +358,79 @@ describe("Modelo de discusion de Pregunta", function(){
 			});
 	});
 
+	it("deberia no poder editar el titulo de  una discusion de pregunta, en el cual soy el creador," +
+		"debido que el estado de la discusion se encuentra en estado" +
+		"pendiente", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByTitulo($idDiscusionPregunta: String!,$correoUsuario: String!, $titulo: String){
+							editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, titulo: $titulo){
+								titulo
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					titulo: "esta es una discusion editada por kevin Ortiz"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/the question creator's is editing the content, thanks to your issues,you can not make change to a issues, in state pending/);
+				done();
+			});
+	});
+	it("deberia no poder editar el titulo de  una discusion de pregunta, en el cual soy el creador," +
+		"debido que el estado de la discusion se encuentra en estado" +
+		"cerrado", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByTitulo($idDiscusionPregunta: String!,$correoUsuario: String!, $titulo: String){
+							editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, titulo: $titulo){
+								titulo
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					titulo: "esta es una discusion editada por kevin Ortiz"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/the issues was reject by a committee member, so you must create a new one issues/);
+				done();
+			});
+	});
+	it("deberia no poder editar el titulo de  una discusion de pregunta, en el cual soy el creador," +
+		"debido que el estado de la discusion se encuentra en estado" +
+		"resuelto", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByTitulo($idDiscusionPregunta: String!,$correoUsuario: String!, $titulo: String){
+							editarMyDiscusionPreguntaByTitulo(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, titulo: $titulo){
+								titulo
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					titulo: "esta es una discusion editada por kevin Ortiz"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you already accept the change of the question creator, so you decided marked this issues like solved!, you should create other issues/);
+				done();
+			});
+	});
+
 	it("deberia poder editar el titulo de  una discusion de pregunta, en el cual soy el creador", function (done) {
 		self
 			.test(JSON.stringify({
@@ -399,6 +472,75 @@ describe("Modelo de discusion de Pregunta", function(){
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(false);
 				expect(response.errors[0].message).toMatch(/this question issue you can not edit, because you are not the owner/);
+				done();
+			});
+	});
+	it("deberia no poder editar la descripcion de  una discusion de pregunta, en el cual soy el creador" +
+		"debido que se encuentra en un estado de pendiente", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByDescripcion($idDiscusionPregunta: String!,$correoUsuario: String!, $descripcion: String){
+							editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, descripcion: $descripcion){
+							 	descripcion
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					descripcion: "descripcion utilizada por ejemplo"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/the question creator's is editing the content, thanks to your issues,you can not make change to a issues, in state pending/);
+				done();
+			});
+	});
+	it("deberia no poder editar la descripcion de  una discusion de pregunta, en el cual soy el creador" +
+		"debido que se encuentra en un estado de cerrado", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByDescripcion($idDiscusionPregunta: String!,$correoUsuario: String!, $descripcion: String){
+							editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, descripcion: $descripcion){
+							 	descripcion
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					descripcion: "descripcion utilizada por ejemplo"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/the issues was reject by a committee member, so you must create a new one issues/);
+				done();
+			});
+	});
+	it("deberia no poder editar la descripcion de  una discusion de pregunta, en el cual soy el creador" +
+		"debido que se encuentra en un estado de resuelto", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarMyDiscusionPreguntaByDescripcion($idDiscusionPregunta: String!,$correoUsuario: String!, $descripcion: String){
+							editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: $idDiscusionPregunta,correoUsuario: $correoUsuario, descripcion: $descripcion){
+							 	descripcion
+							}
+
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					correoUsuario:"kevinandresortizmerchan@gmail.com",
+					descripcion: "descripcion utilizada por ejemplo"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you already accept the change of the question creator, so you decided marked this issues like solved!, you should create other issues/);
 				done();
 			});
 	});

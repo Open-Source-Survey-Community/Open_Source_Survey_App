@@ -108,9 +108,7 @@ export default {
 									throw new Error(error);
 								}
 							});
-
 					}
-
 				}).catch(error => {
 					if (error){
 						throw new Error(error);
@@ -119,49 +117,85 @@ export default {
 
 		},
 		editarMyDiscusionPreguntaByTitulo: (parent, args, {models}) => {
-			return models.discusionPregunta.findById(args.idDiscusionPregunta, "creador_correccion")
-				.populate("creador_correccion")
-				.then(correccionPregunta => {
-					if (correccionPregunta.creador_correccion.correo === args.correoUsuario) {
-						return models.discusionPregunta.findByIdAndUpdate(args.idDiscusionPregunta,
-							{$set: {titulo: args.titulo}},{new: true})
-							.then(correccionPreguntaActualizada => {
-								return correccionPreguntaActualizada;
+			return models.discusionPregunta.findOne({"_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario"},
+				{"estado_correccion.$":1})
+				.then(discusionPregunta => {
+					if (discusionPregunta.estado_correccion[0].asignacion === "pendiente"){
+						throw new Error("the question creator's is editing the content, thanks to your issues," +
+							"you can not make change to a issues, in state pending");
+					}else if (discusionPregunta.estado_correccion[0].asignacion === "cerrado") {
+						throw new Error("the issues was reject by a committee member, so you must create a new one issues");
+					}else if (discusionPregunta.estado_correccion[0].asignacion === "resuelto") {
+						throw new Error("you already accept the change of the question creator, so you decided " +
+							"marked this issues like solved!, you should create other issues");
+					}else{
+						return models.discusionPregunta.findById(args.idDiscusionPregunta, "creador_correccion")
+							.populate("creador_correccion")
+							.then(correccionPregunta => {
+								if (correccionPregunta.creador_correccion.correo === args.correoUsuario) {
+									return models.discusionPregunta.findByIdAndUpdate(args.idDiscusionPregunta,
+										{$set: {titulo: args.titulo}},{new: true})
+										.then(correccionPreguntaActualizada => {
+											return correccionPreguntaActualizada;
+										}).catch(error => {
+											if (error) {
+												throw new Error(error);
+											}
+
+										});
+								}else {
+									throw new Error("this question issue you can not edit, because you are not the owner");
+								}
 							}).catch(error => {
 								if (error) {
 									throw new Error(error);
 								}
-
 							});
-					}else {
-						throw new Error("this question issue you can not edit, because you are not the owner");
 					}
-
-				}).catch(error => {
+				})
+				.catch(error => {
 					if (error) {
 						throw new Error(error);
 					}
 				});
 		},
 		editarMyDiscusionPreguntaByDescripcion: (parent, args, {models}) => {
-			return models.discusionPregunta.findById(args.idDiscusionPregunta, "creador_correccion")
-				.populate("creador_correccion")
-				.then(correccionPregunta => {
-					if (correccionPregunta.creador_correccion.correo === args.correoUsuario) {
-						return models.discusionPregunta.findByIdAndUpdate(args.idDiscusionPregunta,
-							{$set: {descripcion: args.descripcion}},{new: true})
-							.then(correccionPreguntaActualizada => {
-								return correccionPreguntaActualizada;
+			return models.discusionPregunta.findOne({"_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario"},
+				{"estado_correccion.$":1})
+				.then(discusionPregunta => {
+					if (discusionPregunta.estado_correccion[0].asignacion === "pendiente"){
+						throw new Error("the question creator's is editing the content, thanks to your issues," +
+							"you can not make change to a issues, in state pending");
+					}else if (discusionPregunta.estado_correccion[0].asignacion === "cerrado") {
+						throw new Error("the issues was reject by a committee member, so you must create a new one issues");
+					}else if (discusionPregunta.estado_correccion[0].asignacion === "resuelto") {
+						throw new Error("you already accept the change of the question creator, so you decided " +
+							"marked this issues like solved!, you should create other issues");
+					} else {
+						return models.discusionPregunta.findById(args.idDiscusionPregunta, "creador_correccion")
+							.populate("creador_correccion")
+							.then(correccionPregunta => {
+								if (correccionPregunta.creador_correccion.correo === args.correoUsuario) {
+									return models.discusionPregunta.findByIdAndUpdate(args.idDiscusionPregunta,
+										{$set: {descripcion: args.descripcion}},{new: true})
+										.then(correccionPreguntaActualizada => {
+											return correccionPreguntaActualizada;
+										}).catch(error => {
+											if (error) {
+												throw new Error(error);
+											}
+
+										});
+								}else {
+									throw new Error("this question issue you can not edit, because you are not the owner");
+								}
+
 							}).catch(error => {
 								if (error) {
 									throw new Error(error);
 								}
-
 							});
-					}else {
-						throw new Error("this question issue you can not edit, because you are not the owner");
 					}
-
 				}).catch(error => {
 					if (error) {
 						throw new Error(error);
