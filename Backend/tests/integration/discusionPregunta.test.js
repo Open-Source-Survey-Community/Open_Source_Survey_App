@@ -194,6 +194,44 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+	it("deberia poder eliminar una discusion de pregunta, en el cual soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation eliminarDiscusionPregunta($idDiscusionPregunta: String!,$creador_correccion: String){
+							eliminarDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta,creador_correccion: $creador_correccion)
+				
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					creador_correccion:"5ac24c758e4a6a23d4869ac7"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.eliminarDiscusionPregunta).toBe(true);
+				done();
+			});
+	});
+	it("deberia no poder eliminar una discusion de pregunta, en el cual no soy el creador", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation eliminarDiscusionPregunta($idDiscusionPregunta: String!,$creador_correccion: String){
+							eliminarDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta,creador_correccion: $creador_correccion)
+				
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e",
+					creador_correccion:"5ac24c758e4a6a23d4779ac7"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/This user can't edit this question, because he is not the owner/);
+				done();
+			});
+	});
 
 
 });

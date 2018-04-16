@@ -50,7 +50,10 @@ const DiscusionPregunta = `
 		## esta operacion solamente puede ser efectuada por el creador de la discusion
 		editarDiscusionPregunta(idDiscusionPregunta: String!, discusionPregunta: discusionPreguntaInput): Boolean
 		
-	
+		## eliminar discusion de una pregunta
+		## Esta accion indica que un usuario decide eliminar una discusion de una pregunta que ha 
+		## desarrollado, de manera previa
+		eliminarDiscusionPregunta(idDiscusionPregunta: String!, creador_correccion: String): Boolean
 	
 	}
 	

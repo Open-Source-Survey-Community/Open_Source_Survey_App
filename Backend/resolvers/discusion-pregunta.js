@@ -52,10 +52,10 @@ export default {
 
 		},
 		editarDiscusionPregunta: (parent, args, {models}) => {
-			return models.discusionPregunta.update({_id: args.idDiscusionPregunta, creador_correccion: args.discusionPregunta.creador_correccion },
+			return models.discusionPregunta.update({_id: args.idDiscusionPregunta, creador_correccion: args.discusionPregunta.creador_correccion},
 				args.discusionPregunta)
 				.then(documentoAfectado => {
-					if (documentoAfectado.n){
+					if (documentoAfectado.n === 1){
 						return true;
 
 					}else{
@@ -68,6 +68,23 @@ export default {
 					}
 				});
 
+		},
+		eliminarDiscusionPregunta: (parent, args, {models}) => {
+			return models.discusionPregunta.update({_id: args.idDiscusionPregunta,creador_correccion: args.creador_correccion },
+				{habilitada: false})
+				.then(correccionActualizada => {
+					if (correccionActualizada.n === 1) {
+						return true;
+					} else {
+						throw new Error("This user can't edit this question, because he is not the owner");
+					}
+
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+
+				});
 		}
 
 	}
