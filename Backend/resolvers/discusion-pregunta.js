@@ -9,7 +9,7 @@ export default {
 			return models.discusionPregunta.findOne({titulo: args.discusionPregunta.titulo})
 				.then(discusionPregunta => {
 					if(discusionPregunta) {
-						throw new Error("you already create this question, you can create the same correction two times");
+						throw new Error("you already create this question, you can't create the same correction two times");
 					}else{
 						return models.discusionPregunta.count()
 							.then(numeroDiscusionesPregunta => {
@@ -60,7 +60,7 @@ export default {
 					}else if (discusionPregunta.estado_correccion[0].asignacion === "cerrado") {
 						throw new Error("the issues was reject by a committee member, so you must create a new one issues");
 					}else if (discusionPregunta.estado_correccion[0].asignacion === "resuelto") {
-						throw new Error("you already accept the change of the question creator, so you decided " +
+						throw new Error("the creator this issues already accept the change of the question creator, so you decided " +
 							"marked this issues like solved!, you should create other issues");
 					}else {
 						return models.discusionPregunta.update({_id: args.idDiscusionPregunta, creador_correccion: args.discusionPregunta.creador_correccion},
@@ -195,6 +195,42 @@ export default {
 									throw new Error(error);
 								}
 							});
+					}
+				}).catch(error => {
+					if (error) {
+						throw new Error(error);
+					}
+				});
+		},
+		aprobarEstadoMyDiscusionPregunta: (parent, args, {models}) => {
+			return models.discusionPregunta.findById(args.idDiscusionPregunta)
+				.then(documentoDiscusionPregunta => {
+					if (documentoDiscusionPregunta.habilitada){
+						return models.discusionPregunta.findOne({"_id": args.idDiscusionPregunta,
+							"estado_correccion.usuario_creador_estado": documentoDiscusionPregunta.creador_correccion},
+						{"estado_correccion.$":1})
+							.then(arrayFiltrado => {
+								if(arrayFiltrado.estado_correccion[0]["asignacion"]!== "cerrado" && arrayFiltrado.estado_correccion[0]["asignacion"]!== "resuelto"){
+									return models.discusionPregunta.findOneAndUpdate({"_id": args.idDiscusionPregunta,
+										"estado_correccion.usuario_creador_estado": documentoDiscusionPregunta.creador_correccion},
+									{$set: {"estado_correccion.$.asignacion":"resuelto",
+										"estado_correccion.$.observacion":"el usuario ha cerrado esta discusion," +
+												"debido que el creador de la pregunta, realizo los cambios respectivos"}},
+									{new: true}).then(discusionAprovada => {
+										return discusionAprovada;
+									}).catch(error => {
+										throw new Error(error);
+									});
+								}else{
+									throw new Error("you can't approved a issues questions, that already is closed or solved!");
+								}
+							}).catch(error => {
+								if (error) {
+									throw new Error(error);
+								}
+							});
+					}else{
+						throw new Error("you can't approved a question issues, that you had closed!");
 					}
 				}).catch(error => {
 					if (error) {

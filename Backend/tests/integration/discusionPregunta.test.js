@@ -47,6 +47,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("No deberia guardar una discusion de Pregunta que ya sido previamente creada", function (done) {
 		self
 			.test(JSON.stringify({
@@ -102,7 +103,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				}`,
 				variables: {
 					discusionPregunta:{
-						titulo: "mi segunda discusion de pregunta",
+						titulo: "mi tercera discusion de pregunta",
 						etiquetas_correcciones: ["5ad224fcd47c4b51302491ce","5ad224fcd47c4b51302491cf"],
 						descripcion: "esta pregunta algunos  errores",
 						tipo_correccion: ["descripcion","contenido_multimedia"],
@@ -122,10 +123,11 @@ describe("Modelo de discusion de Pregunta", function(){
 			.then(response => {
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(true);
-				expect(response.data.nuevaDiscusionPregunta.titulo).toMatch(/mi segunda discusion de pregunta/);
+				expect(response.data.nuevaDiscusionPregunta.titulo).toMatch(/mi tercera discusion de pregunta/);
 				done();
 			});
 	});
+
 	it("deberia poder editar una discusion de pregunta, en el cual soy el creador", function (done) {
 		self
 			.test(JSON.stringify({
@@ -160,6 +162,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia no poder editar una discusion de pregunta, en el cual soy el creador" +
 		"debido que el estado asignado es pendiente", function (done) {
 		self
@@ -195,6 +198,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia no poder editar una discusion de pregunta, en el cual soy el creador" +
 		"debido que el estado asignado es cerrado", function (done) {
 		self
@@ -230,6 +234,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia no poder editar una discusion de pregunta, en el cual soy el creador" +
 		"debido que el estado asignado es resuelto", function (done) {
 		self
@@ -265,6 +270,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia no poder editar una discusion de pregunta, en el cual no soy el creador", function (done) {
 		self
 			.test(JSON.stringify({
@@ -279,7 +285,7 @@ describe("Modelo de discusion de Pregunta", function(){
 						etiquetas_correcciones: ["5ad224fcd47c4b51302491ce","5ad224fcd47c4b51302491cf"],
 						descripcion: "esta es una discusion editada ",
 						tipo_correccion: ["descripcion","contenido_multimedia","respuestas"],
-						creador_correccion:"5ac24c758e4a6a23d4969ac7",
+						creador_correccion:"5ac24c758e4a6a23d4889ac7",
 						estado_correccion:{
 							usuario_creador_estado: "5ac24c758e4a6a23d4869ac7",
 							rol: "usuario",
@@ -299,6 +305,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia poder eliminar una discusion de pregunta, en el cual soy el creador", function (done) {
 		self
 			.test(JSON.stringify({
@@ -318,6 +325,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia no poder eliminar una discusion de pregunta, en el cual no soy el creador", function (done) {
 		self
 			.test(JSON.stringify({
@@ -337,6 +345,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+
 	it("deberia no poder eliminar una discusion de pregunta, en el cual soy el creador," +
 		"pero se encuentra en un estado pendiente", function (done) {
 		self
@@ -588,6 +597,105 @@ describe("Modelo de discusion de Pregunta", function(){
 				done();
 			});
 	});
+	it("Deberia poder cambiar el estado de aprobado a  mi discusion de Pregunta," +
+		"siendo el creador de la discusion de la pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation aprobarEstadoMyDiscusionPregunta($idDiscusionPregunta: String){
+							aprobarEstadoMyDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta){
+							 	estado_correccion{
+							 		observacion
+							 		asignacion
+							 	}
+							}
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.aprobarEstadoMyDiscusionPregunta.estado_correccion[0].asignacion).toMatch(/resuelto/);
+				expect(response.data.aprobarEstadoMyDiscusionPregunta.estado_correccion[0].observacion).toMatch(/el usuario ha cerrado esta discusion,/);
+				done();
+			});
+		
+	});
+	it("No Deberia poder cambiar el estado de aprobado a  mi discusion de Pregunta," +
+		"siendo el creador de la discusion de la pregunta, debido que se " +
+		"encuentra deshabilitada", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation aprobarEstadoMyDiscusionPregunta($idDiscusionPregunta: String){
+							aprobarEstadoMyDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta){
+							 	estado_correccion{
+							 		observacion
+							 		asignacion
+							 	}
+							}
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't approved a question issues, that you had closed!/);
+				done();
+			});
 
+	});
+	it("No Deberia poder cambiar el estado de aprobado a  mi discusion de Pregunta," +
+		"siendo el creador de la discusion de la pregunta, y el estado de la discusion es " +
+		"cerrado", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation aprobarEstadoMyDiscusionPregunta($idDiscusionPregunta: String){
+							aprobarEstadoMyDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta){
+							 	estado_correccion{
+							 		observacion
+							 		asignacion
+							 	}
+							}
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't approved a issues questions, that already is closed or solved!/);
+				done();
+			});
+
+	});
+	it("No Deberia poder cambiar el estado de aprobado a  mi discusion de Pregunta," +
+		"siendo el creador de la discusion de la pregunta, debido que la discusion" +
+		"ya se encuentra resuelta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation aprobarEstadoMyDiscusionPregunta($idDiscusionPregunta: String){
+							aprobarEstadoMyDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta){
+							 	estado_correccion{
+							 		observacion
+							 		asignacion
+							 	}
+							}
+				}`,
+				variables: {
+					idDiscusionPregunta:"5ad2528cc89887677f3f5c6e"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/you can't approved a issues questions, that already is closed or solved!/);
+				done();
+			});
+
+	});
 
 });

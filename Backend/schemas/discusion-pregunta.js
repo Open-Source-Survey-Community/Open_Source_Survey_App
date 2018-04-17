@@ -62,10 +62,10 @@ const DiscusionPregunta = `
 		##Esta accion indica que un usuario creador de una discusion, puede editar de manera rapida, la descripcion de una pregunta
 		editarMyDiscusionPreguntaByDescripcion(idDiscusionPregunta: String!, correoUsuario: String!, descripcion: String): DiscusionPregunta
 		
+		## Esta accion cambia el estado de una discusion de una pregunta a resuelto
+		## Esta accion solamente lo puede realizar el creador de la discusion de la pregunta
+		aprobarEstadoMyDiscusionPregunta(idDiscusionPregunta: String): DiscusionPregunta
 	}
-	
-
-
 
 `;
 export default DiscusionPregunta;
