@@ -699,3 +699,98 @@ describe("Modelo de discusion de Pregunta", function(){
 	});
 
 });
+
+describe("Acciones de consulta del modelo de discusiones de Pregunta", function (){
+	const self = this;
+	self.test = tester({
+		url: "http://127.0.0.1:3660/graphtest",
+		contentType: "application/json"
+	});
+	it("Deberia poder ver los dos primeros elementos de discusiones" +
+		"basada en una pregunta, podiendo tener la opcion de ver " +
+		"que todavia existe un proximo elemento en consultar", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query getListaIssuesByQuestions($limit: Int, $after: String, $idPregunta: String!){
+							getListaIssuesByQuestions(limit: $limit, after: $after, idPregunta: $idPregunta){
+							 		totalCount
+							 		edges {
+							 			cursor
+							 			node {
+							 				creador_correccion {
+							 					correo
+							 				}
+							 				estado_correccion{
+							 					rol
+							 					usuario_creador_estado{
+							 						correo
+							 					}
+							 				}
+							 			}
+							 		}
+							 		pageInfo{
+							 			endCursor
+							 			hasnextPage
+							 		}				
+							 	}				
+						}`,
+				variables: {
+					limit: 2,
+					after:"",
+					idPregunta:"5acde1c58cdf5a5284349713"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.getListaIssuesByQuestions.totalCount).toBe(3);
+				expect(response.data.getListaIssuesByQuestions.pageInfo.hasnextPage).toBe(true);
+				expect(response.data.getListaIssuesByQuestions.edges[0].node.creador_correccion.correo).toMatch(/kevinandresortizmerchan/);
+				done();
+			});
+		
+	});
+	it("Deberia poder ve todos los elementos de discusiones" +
+		"basada en una pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query getListaIssuesByQuestions($limit: Int, $after: String, $idPregunta: String!){
+							getListaIssuesByQuestions(limit: $limit, after: $after, idPregunta: $idPregunta){
+							 		totalCount
+							 		edges {
+							 			cursor
+							 			node {
+							 				creador_correccion {
+							 					correo
+							 				}
+							 				estado_correccion{
+							 					rol
+							 					usuario_creador_estado{
+							 						correo
+							 					}
+							 				}
+							 			}
+							 		}
+							 		pageInfo{
+							 			endCursor
+							 			hasnextPage
+							 		}				
+							 	}				
+						}`,
+				variables: {
+					limit: 0,
+					after:"",
+					idPregunta:"5acde1c58cdf5a5284349713"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.getListaIssuesByQuestions.totalCount).toBe(3);
+				expect(response.data.getListaIssuesByQuestions.pageInfo.hasnextPage).toBe(false);
+				expect(response.data.getListaIssuesByQuestions.edges[0].node.creador_correccion.correo).toMatch(/kevinandresortizmerchan/);
+				done();
+			});
+
+	});
+});

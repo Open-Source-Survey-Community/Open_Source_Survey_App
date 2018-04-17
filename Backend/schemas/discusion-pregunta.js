@@ -22,6 +22,17 @@ const DiscusionPregunta = `
 		observacion: String
 
 	}
+	type DiscusionPreguntaConnection {
+		totalCount: Int
+		edges : [DiscusionPreguntaEdge]
+		pageInfo: PageInfo
+			
+	}
+			
+	type DiscusionPreguntaEdge {
+		cursor: String
+		node: DiscusionPregunta		
+	}
 	
 	input estadoCorreccionPreguntaInput{
 		usuario_creador_estado: ID!
@@ -39,6 +50,14 @@ const DiscusionPregunta = `
 		estado_correccion: [estadoCorreccionPreguntaInput]
 		fecha_creacion: String
 		pregunta_ID: ID!
+	
+	}
+	
+			
+	
+	type Query{
+		##Get the list paginated of the issues question related to question
+		getListaIssuesByQuestions(limit: Int, after: String,idPregunta: String!): DiscusionPreguntaConnection
 	
 	}
 	

@@ -2,6 +2,76 @@
 export default {
 
 	Query: {
+		getListaIssuesByQuestions: (parent, args, {models}) => {
+			let edgeDiscusionPreguntaArray = [];
+			let cursor = parseInt(Buffer.from(args.after, "base64").toString("ascii"));
+			if (!cursor){
+				cursor = 0;
+			}
+			if(!args.limit){
+				args.limit = 5;
+			}
+			let edgeDiscusionPreguntaInfoPromise = new Promise((resolve, reject)=> {
+				let edges = models.discusionPregunta.find({identificador:{$gt:cursor},pregunta_ID: args.idPregunta}, (err, result) => {
+					if(err){
+						reject(err);
+					}
+				}).populate("creador_correccion")
+					.populate("estado_correccion.usuario_creador_estado")
+					.limit(args.limit).cursor();
+
+				edges.on("data", res => {
+					edgeDiscusionPreguntaArray.push({
+						cursor : Buffer.from((res.identificador).toString()).toString("base64"),
+						node: res
+					});
+				});
+				edges.on("end",()=> {
+					let endCursor = edgeDiscusionPreguntaArray.length > 0 ? edgeDiscusionPreguntaArray[edgeDiscusionPreguntaArray.length - 1].cursor:NaN;
+					let hasNextPage = new Promise((resolve, reject)=> {
+						if (endCursor) {
+							let cursorFinal = parseInt(Buffer.from(endCursor,"base64").toString("ascii"));
+							models.discusionPregunta.where("identificador").gt(cursorFinal).count({},(err, count)=> {
+								if (err) {
+									reject(err);
+								}
+								count > 0 ? resolve(true): resolve(false);
+							});
+
+						} else {
+							resolve(false);
+						}
+					});
+					resolve({
+						edges: edgeDiscusionPreguntaArray,
+						pageInfo: {
+							endCursor: endCursor,
+							hasnextPage: hasNextPage
+						}
+					});
+				});
+			});
+			let totalPagesPromise = new Promise((resolve, reject) => {
+				models.discusionPregunta.count((err, count) => {
+					if (err) {
+						reject(err);
+					}else {
+						resolve(count);
+					}
+				});
+			});
+			let listPaginateDiscusionPregunta = Promise.all([edgeDiscusionPreguntaInfoPromise, totalPagesPromise]).then((values) => {
+				return {
+					edges: values[0].edges,
+					totalCount: values[1],
+					pageInfo:{
+						endCursor: values[0].pageInfo.endCursor,
+						hasnextPage:values[0].pageInfo.hasnextPage
+					}
+				};
+			});
+			return listPaginateDiscusionPregunta;
+		}
 
 	},
 	Mutation: {
