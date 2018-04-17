@@ -71,8 +71,18 @@ export default {
 				};
 			});
 			return listPaginateDiscusionPregunta;
+		},
+		getListaUsuariosAsignadoEstadoCorreccionPregunta: (parent, args, {models}) => {
+			return models.discusionPregunta.findById(args.idDiscusionPregunta)
+				.populate("estado_correccion.usuario_creador_estado")
+				.then(listaUsuarios => {
+					return listaUsuarios;
+				}).catch(error => {
+					if(error){
+						throw new Error(error);
+					}
+				});
 		}
-
 	},
 	Mutation: {
 		nuevaDiscusionPregunta : (parent, args, {models}) => {

@@ -736,7 +736,7 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 						}`,
 				variables: {
 					limit: 2,
-					after:"",
+					after:"Mg==",
 					idPregunta:"5acde1c58cdf5a5284349713"
 				}
 			}))
@@ -744,7 +744,7 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(true);
 				expect(response.data.getListaIssuesByQuestions.totalCount).toBe(3);
-				expect(response.data.getListaIssuesByQuestions.pageInfo.hasnextPage).toBe(true);
+				expect(response.data.getListaIssuesByQuestions.pageInfo.hasnextPage).toBe(false);
 				expect(response.data.getListaIssuesByQuestions.edges[0].node.creador_correccion.correo).toMatch(/kevinandresortizmerchan/);
 				done();
 			});
@@ -793,4 +793,35 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 			});
 
 	});
+	it("Deberia poder ver la lista de todos los usuarios que han asignado un estado" +
+		"a mi correccion de pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query getListaUsuariosAsignadoEstadoCorreccionPregunta($idDiscusionPregunta: String!){
+							getListaUsuariosAsignadoEstadoCorreccionPregunta(idDiscusionPregunta: $idDiscusionPregunta){
+							 		estado_correccion{
+							 			rol
+							 			asignacion
+							 			observacion
+							 			usuario_creador_estado{
+							 				nombre
+							 			}
+							 		}			
+							 	}				
+						}`,
+				variables: {
+					idDiscusionPregunta: "5ad6188ebd916635f7ac9f86"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.getListaUsuariosAsignadoEstadoCorreccionPregunta.estado_correccion[0].rol).toMatch(/usuario/);
+				expect(response.data.getListaUsuariosAsignadoEstadoCorreccionPregunta.estado_correccion[0].asignacion).toMatch(/creado/);
+				expect(response.data.getListaUsuariosAsignadoEstadoCorreccionPregunta.estado_correccion[0].usuario_creador_estado.nombre).toMatch(/kevin/);
+				done();
+			});
+
+	});
+
 });
