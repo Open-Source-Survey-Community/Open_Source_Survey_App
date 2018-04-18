@@ -108,6 +108,32 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		loadListaDiscusionesGeneradasByPregunta: (parent, args, {models}) => {
+			return models.Pregunta.findOne({_id:args.idPregunta}, {discusiones:{$slice: args.limit}})
+				.populate({
+					path: "discusiones",
+					populate:{
+						path:"creador_correccion",
+						model:"usuario"
+					}
+				})
+				.populate({
+					path: "discusiones",
+					populate:{
+						path:"estado_correccion.usuario_creador_estado",
+						model:"usuario"
+					}
+
+				}).then(listadoDiscusionesPregunta => {
+					return listadoDiscusionesPregunta.discusiones;
+
+				}).catch(error => {
+					if (error) {
+						throw new Error(error);
+					}
+
+				});
 		}
 	},
 	Mutation: {
@@ -321,7 +347,8 @@ export default {
 										"estado_correccion.usuario_creador_estado": documentoDiscusionPregunta.creador_correccion},
 									{$set: {"estado_correccion.$.asignacion":"resuelto",
 										"estado_correccion.$.observacion":"el usuario ha cerrado esta discusion," +
-												"debido que el creador de la pregunta, realizo los cambios respectivos"}},
+												"debido que el creador de la pregunta, realizo los cambios respectivos",
+										"fecha_cierre": new Date()}},
 									{new: true}).then(discusionAprovada => {
 										return discusionAprovada;
 									}).catch(error => {

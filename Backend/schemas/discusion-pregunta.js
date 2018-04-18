@@ -50,7 +50,6 @@ const DiscusionPregunta = `
 		estado_correccion: [estadoCorreccionPreguntaInput]
 		fecha_creacion: String
 		pregunta_ID: ID!
-	
 	}
 	
 			
@@ -65,6 +64,9 @@ const DiscusionPregunta = `
 		getListaUsuariosAsignadoEstadoCorreccionPregunta(idDiscusionPregunta: String!): DiscusionPregunta
 		
 		loadDiscusionPregunta(idDiscusionPregunta: String): DiscusionPregunta
+		
+		##esta consulta se debe realizar cuando se desea generar un datatable de correcciones de preguntas
+		loadListaDiscusionesGeneradasByPregunta(idPregunta: String, limit: Int):[DiscusionPregunta]
 	
 	}
 	

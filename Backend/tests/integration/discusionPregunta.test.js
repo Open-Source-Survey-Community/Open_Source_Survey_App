@@ -23,7 +23,7 @@ describe("Modelo de discusion de Pregunta", function(){
 				}`,
 				variables: {
 					discusionPregunta:{
-						titulo: "mi primera discusion de pregunta",
+						titulo: "mi septima discusion de pregunta",
 						etiquetas_correcciones: ["5ad224fcd47c4b51302491ce","5ad224fcd47c4b51302491cf"],
 						descripcion: "esta pregunta tiene varios errores",
 						tipo_correccion: ["descripcion","contenido_multimedia"],
@@ -35,7 +35,7 @@ describe("Modelo de discusion de Pregunta", function(){
 							observacion:"discusion de pregunta creada"
 						},
 						fecha_creacion: new Date(),
-						pregunta_ID: "5acde1c58cdf5a5284349713"
+						pregunta_ID: "5acde1c58cdf5a5284349714"
 					}
 				}
 
@@ -43,7 +43,7 @@ describe("Modelo de discusion de Pregunta", function(){
 			.then(response => {
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(true);
-				expect(response.data.nuevaDiscusionPregunta.titulo).toMatch(/mi primera discusion de pregunta/);
+				expect(response.data.nuevaDiscusionPregunta.titulo).toMatch(/mi septima discusion de pregunta/);
 				done();
 			});
 	});
@@ -861,6 +861,32 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 			});
 
 	});
+	it("Deberia poder ver el listado de discusiones anexadas a una pregunta" , function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query loadListaDiscusionesGeneradasByPregunta($idPregunta: String, $limit: Int){
+							loadListaDiscusionesGeneradasByPregunta(idPregunta: $idPregunta, limit: $limit){
+							 		creador_correccion{
+							 			nombre
+							 		}
+							 		estado_correccion{
+							 			usuario_creador_estado {
+							 				nombre
+							 			}
+							 		}			
+							 	}				
+						}`,
+				variables: {
+					idPregunta: "5acde1c58cdf5a5284349714",
+					limit: 10
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				done();
+			});
 
+	});
 
 });
