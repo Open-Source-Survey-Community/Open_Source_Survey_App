@@ -823,5 +823,44 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 			});
 
 	});
+	it("Deberia poder ver el contenido de una discusion de una pregunta dado un identificador" , function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query loadDiscusionPregunta($idDiscusionPregunta: String!){
+							loadDiscusionPregunta(idDiscusionPregunta: $idDiscusionPregunta){
+							 		estado_correccion{
+							 			rol
+							 			asignacion
+							 			observacion
+							 			usuario_creador_estado{
+							 				nombre
+							 			}
+							 		}
+							 		pregunta_ID {
+							 			descripcion
+							 			respuestas
+							 			tipoPregunta
+							 			areaconocimiento {
+							 				titulo
+							 			}
+							 			usuario_ID{
+							 				nombre
+							 				correo
+							 			}
+							 		}			
+							 	}				
+						}`,
+				variables: {
+					idDiscusionPregunta: "5ad2528cc89887677f3f5c6e"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				done();
+			});
+
+	});
+
 
 });

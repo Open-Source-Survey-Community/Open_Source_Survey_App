@@ -82,6 +82,32 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		loadDiscusionPregunta: (parent, args, {models}) => {
+			return models.discusionPregunta.findById(args.idDiscusionPregunta)
+				.populate("creador_correccion")
+				.populate("estado_correccion.usuario_creador_estado")
+				.populate({
+					path:"pregunta_ID",
+					populate:{
+						path: "areaconocimiento",
+						model: "areas-conocimiento"
+					}
+				})
+				.populate({
+					path:"pregunta_ID",
+					populate:{
+						path: "usuario_ID",
+						model: "usuario"
+					}
+				})
+				.then(documento => {
+					return documento;
+				}).catch(error => {
+					if (error) {
+						throw new Error(error);
+					}
+				});
 		}
 	},
 	Mutation: {
