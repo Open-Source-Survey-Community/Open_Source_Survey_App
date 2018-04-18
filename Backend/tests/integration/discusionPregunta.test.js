@@ -836,6 +836,9 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 							 				nombre
 							 			}
 							 		}
+							 		etiquetas_correcciones{
+							 				etiqueta
+							 		}
 							 		pregunta_ID {
 							 			descripcion
 							 			respuestas
@@ -869,6 +872,9 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 							 		creador_correccion{
 							 			nombre
 							 		}
+							 		etiquetas_correcciones{
+							 			etiqueta
+							 		}
 							 		estado_correccion{
 							 			usuario_creador_estado {
 							 				nombre
@@ -880,6 +886,38 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 					idPregunta: "5acde1c58cdf5a5284349714",
 					limit: 10
 				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				done();
+			});
+
+	});
+	it("Deberia poder ver las 10 primeras discusiones mas recientes" , function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query loadFirstDiscusionesPreguntasRecienCreadas{
+							loadFirstDiscusionesPreguntasRecienCreadas{
+							 		creador_correccion{
+							 			nombre
+							 		}
+							 		estado_correccion{
+							 			usuario_creador_estado {
+							 				nombre
+							 			}
+							 		}	
+							 		titulo
+							 		descripcion
+							 		tipo_correccion
+							 		etiquetas_correcciones{
+							 			etiqueta
+							 		}
+							 		pregunta_ID{
+							 			tipoPregunta
+							 		}		
+							 	}				
+						}`
 			}))
 			.then(response => {
 				expect(response.status).toBe(200);

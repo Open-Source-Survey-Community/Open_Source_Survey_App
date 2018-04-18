@@ -17,6 +17,7 @@ export default {
 						reject(err);
 					}
 				}).populate("creador_correccion")
+					.populate("etiquetas_correcciones")
 					.populate("estado_correccion.usuario_creador_estado")
 					.limit(args.limit).cursor();
 
@@ -87,6 +88,7 @@ export default {
 			return models.discusionPregunta.findById(args.idDiscusionPregunta)
 				.populate("creador_correccion")
 				.populate("estado_correccion.usuario_creador_estado")
+				.populate("etiquetas_correcciones")
 				.populate({
 					path:"pregunta_ID",
 					populate:{
@@ -125,7 +127,15 @@ export default {
 						model:"usuario"
 					}
 
-				}).then(listadoDiscusionesPregunta => {
+				})
+				.populate({
+					path: "discusiones",
+					populate:{
+						path:"etiquetas_correcciones",
+						model:"etiqueta-correcciones"
+					}
+				})
+				.then(listadoDiscusionesPregunta => {
 					return listadoDiscusionesPregunta.discusiones;
 
 				}).catch(error => {
@@ -133,6 +143,21 @@ export default {
 						throw new Error(error);
 					}
 
+				});
+		},
+		loadFirstDiscusionesPreguntasRecienCreadas: (parent, args, {models}) => {
+			return models.discusionPregunta.find({habilitada: true})
+				.populate("creador_correccion")
+				.populate("pregunta_ID")
+				.populate("etiquetas_correcciones")
+				.sort({fecha_creacion: -1})
+				.limit(5)
+				.then(listaDiscusionesPregunta => {
+					return listaDiscusionesPregunta;
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
 				});
 		}
 	},
