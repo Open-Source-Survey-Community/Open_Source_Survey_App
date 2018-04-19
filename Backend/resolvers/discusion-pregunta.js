@@ -516,6 +516,70 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		asignarEstadoACorrecciondePregunta: (parent, args, {models}) => {
+			return models.discusionPregunta.findOne({"_id": args.idDiscusionPregunta},"creador_correccion, estado_correccion")
+				.populate("creador_correccion")
+				.then(usuario => {
+					if(usuario.creador_correccion._id == args.idUsuario){
+						throw new Error("the owner of this issues, can't approved or reject this!!");
+					}else{
+						if (usuario.estado_correccion[0].asignacion === "pendiente" || usuario.estado_correccion.asignacion === "cerrado"){
+							throw new Error("this issues was already assigned by a committe member, you can't change this!");
+						}else if(usuario.estado_correccion[0].asignacion === "resuelto") {
+							throw new Error("this issues was already marked like solved, by the owner this content");
+						}else{
+							if (args.estado === "rechazado"){
+								return models.discusionPregunta.findOneAndUpdate({"_id":args.idDiscusionPregunta,"estado_correccion.rol":"usuario"},
+									{$set: {"estado_correccion.$.asignacion": "cerrado","fecha_cierre": new Date()}},{new: true})
+									.then(discusionActualizada => {
+										return models.discusionPregunta.findOneAndUpdate({"_id":discusionActualizada._id},{$push:{"estado_correccion":{"observacion":args.observacion,"usuario_creador_estado": args.idUsuario,
+											"rol":"moderador","asignacion":"rechazado"}}},{new: true})
+											.populate("estado_correccion.usuario_creador_estado")
+											.then(correccionActualizada => {
+												return correccionActualizada;
+											});
+									}).catch(error => {
+										if (error){
+											throw new Error(error);
+										}
+									});
+							}else if(args.estado === "aceptado"){
+								return models.discusionPregunta.findOneAndUpdate({"_id":args.idDiscusionPregunta,"estado_correccion.rol":"usuario"},
+									{$set: {"estado_correccion.$.asignacion": "pendiente"}},{new: true})
+									.then(discusionActualizada => {
+										return models.discusionPregunta.findOneAndUpdate({"_id":discusionActualizada._id},{$push:{"estado_correccion":{"observacion":args.observacion,"usuario_creador_estado": args.idUsuario,
+											"rol":"moderador","asignacion":"aceptado"}}},{new: true})
+											.populate("estado_correccion.usuario_creador_estado")
+											.populate("pregunta_ID")
+											.then(correccionActualizada => {
+												if (discusionActualizada.pregunta_ID.estado === "estable"){
+													return models.Pregunta.findByIdAndUpdate(discusionActualizada.pregunta_ID._id,
+														{$set:{estado: "revision"}},{new: true})
+														.then(() => {
+															return correccionActualizada;
+														}).catch(error => {
+															if(error){
+																throw new Error(error);
+															}
+														});
+												}
+												return correccionActualizada;
+											});
+
+									}).catch(error => {
+										if (error){
+											throw new Error(error);
+										}
+									});
+							}
+						}
+					}
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
 		}
 	}
 

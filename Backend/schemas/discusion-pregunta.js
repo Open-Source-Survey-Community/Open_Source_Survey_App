@@ -116,6 +116,8 @@ const DiscusionPregunta = `
 		## Esta accion cambia el estado de una discusion de una pregunta a resuelto
 		## Esta accion solamente lo puede realizar el creador de la discusion de la pregunta
 		aprobarEstadoMyDiscusionPregunta(idDiscusionPregunta: String): DiscusionPregunta
+		
+		asignarEstadoACorrecciondePregunta(idDiscusionPregunta: String, idUsuario: String, estado: String, observacion: String): DiscusionPregunta
 	}
 
 `;
