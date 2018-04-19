@@ -242,11 +242,28 @@ exports.default = {
 				};
 			});
 			return listPaginateDiscusionPregunta;
+		},
+		loadlistaUsuariosCreadoCorreccionesPreguntas: function loadlistaUsuariosCreadoCorreccionesPreguntas(parent, args, _ref8) {
+			var models = _ref8.models;
+
+			return models.discusionPregunta.distinct("creador_correccion", { "pregunta_ID": args.idPregunta }).then(function (listaUsuariosDistintos) {
+				return models.User.find({ "_id": { $in: listaUsuariosDistintos } }).then(function (listaUsuarios) {
+					return listaUsuarios;
+				}).catch(function (error) {
+					if (error) {
+						throw new Error(error);
+					}
+				});
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
 		}
 	},
 	Mutation: {
-		nuevaDiscusionPregunta: function nuevaDiscusionPregunta(parent, args, _ref8) {
-			var models = _ref8.models;
+		nuevaDiscusionPregunta: function nuevaDiscusionPregunta(parent, args, _ref9) {
+			var models = _ref9.models;
 
 			return models.discusionPregunta.findOne({ titulo: args.discusionPregunta.titulo }).then(function (discusionPregunta) {
 				if (discusionPregunta) {
@@ -282,8 +299,8 @@ exports.default = {
 				}
 			});
 		},
-		editarDiscusionPregunta: function editarDiscusionPregunta(parent, args, _ref9) {
-			var models = _ref9.models;
+		editarDiscusionPregunta: function editarDiscusionPregunta(parent, args, _ref10) {
+			var models = _ref10.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -311,8 +328,8 @@ exports.default = {
 				}
 			});
 		},
-		eliminarDiscusionPregunta: function eliminarDiscusionPregunta(parent, args, _ref10) {
-			var models = _ref10.models;
+		eliminarDiscusionPregunta: function eliminarDiscusionPregunta(parent, args, _ref11) {
+			var models = _ref11.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -336,8 +353,8 @@ exports.default = {
 				}
 			});
 		},
-		editarMyDiscusionPreguntaByTitulo: function editarMyDiscusionPreguntaByTitulo(parent, args, _ref11) {
-			var models = _ref11.models;
+		editarMyDiscusionPreguntaByTitulo: function editarMyDiscusionPreguntaByTitulo(parent, args, _ref12) {
+			var models = _ref12.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -371,8 +388,8 @@ exports.default = {
 				}
 			});
 		},
-		editarMyDiscusionPreguntaByDescripcion: function editarMyDiscusionPreguntaByDescripcion(parent, args, _ref12) {
-			var models = _ref12.models;
+		editarMyDiscusionPreguntaByDescripcion: function editarMyDiscusionPreguntaByDescripcion(parent, args, _ref13) {
+			var models = _ref13.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -406,8 +423,8 @@ exports.default = {
 				}
 			});
 		},
-		aprobarEstadoMyDiscusionPregunta: function aprobarEstadoMyDiscusionPregunta(parent, args, _ref13) {
-			var models = _ref13.models;
+		aprobarEstadoMyDiscusionPregunta: function aprobarEstadoMyDiscusionPregunta(parent, args, _ref14) {
+			var models = _ref14.models;
 
 			return models.discusionPregunta.findById(args.idDiscusionPregunta).then(function (documentoDiscusionPregunta) {
 				if (documentoDiscusionPregunta.habilitada) {

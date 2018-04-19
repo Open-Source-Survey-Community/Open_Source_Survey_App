@@ -87,6 +87,9 @@ const DiscusionPregunta = `
 		##Cerrado: Lista de correcciones de preguntas que han sido rechazadas por un moderador
 		##Resuelto: Lista de correcciones de preguntas que han sido marcadas como resueltas por el creador de la correccion pregunta
 		loadListaCorreccionesPreguntasByEstado(idPregunta: String, estado: String,limit: Int, after: String): DiscusionPreguntaConnection
+		
+		
+		loadlistaUsuariosCreadoCorreccionesPreguntas(idPregunta: String): [Usuario]
 	
 	}
 	

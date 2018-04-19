@@ -263,6 +263,23 @@ export default {
 				};
 			});
 			return listPaginateDiscusionPregunta;
+		},
+		loadlistaUsuariosCreadoCorreccionesPreguntas: (parent, args, {models})=> {
+			return models.discusionPregunta.distinct("creador_correccion",{"pregunta_ID": args.idPregunta})
+				.then(listaUsuariosDistintos => {
+					return models.User.find({"_id":{$in:listaUsuariosDistintos}})
+						.then(listaUsuarios => {
+							return listaUsuarios;
+						}).catch(error => {
+							if (error){
+								throw new Error(error);
+							}
+						});
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
 		}
 	},
 	Mutation: {

@@ -952,6 +952,26 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 				done();
 			});
 	});
+	it("Deberia poder ver el listado de los usuarios que han creado correcciones de pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query loadlistaUsuariosCreadoCorreccionesPreguntas($idPregunta: String){
+							loadlistaUsuariosCreadoCorreccionesPreguntas(idPregunta: $idPregunta){
+												nombre
+												correo
+							 				}				
+						}`,
+				variables: {
+					idPregunta: "5acde1c58cdf5a5284349714"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.loadlistaUsuariosCreadoCorreccionesPreguntas.length).toBe(1);
+				done();
+			});
+	});
 
 
 });
