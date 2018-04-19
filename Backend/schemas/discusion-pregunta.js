@@ -63,12 +63,21 @@ const DiscusionPregunta = `
 		## tanto del creador de la correccion, como son los moderadores
 		getListaUsuariosAsignadoEstadoCorreccionPregunta(idDiscusionPregunta: String!): DiscusionPregunta
 		
+		##Carga la informacion completa referente a una Correccion de Pregunta
+		## el parametro necesario es el idDiscusionPregunta
 		loadDiscusionPregunta(idDiscusionPregunta: String): DiscusionPregunta
 		
 		##esta consulta se debe realizar cuando se desea generar un datatable de correcciones de preguntas
 		loadListaDiscusionesGeneradasByPregunta(idPregunta: String, limit: Int):[DiscusionPregunta]
 		
+		##Esta consulta carga los primeros 10 correcciones de pregunta que fueron creadas
+		## tomando como parametro la fecha de creacion
 		loadFirstDiscusionesPreguntasRecienCreadas: [DiscusionPregunta]
+		
+		##la informacion que devuelve esta consulta, es una lista de todas
+		##las correcciones referentes a una pregunta que han sido creadas, o han sido actualizadas
+		##esta accion es solo mostrada para los moderadores
+		loadListaCorreccionesByPreguntasCreadasEditadas(idPregunta: String, usuario: String, limit: Int): [DiscusionPregunta]
 	
 	}
 	

@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 export default {
-
 	Query: {
 		getListaIssuesByQuestions: (parent, args, {models}) => {
 			let edgeDiscusionPreguntaArray = [];
@@ -156,6 +155,38 @@ export default {
 					return listaDiscusionesPregunta;
 				}).catch(error => {
 					if (error){
+						throw new Error(error);
+					}
+				});
+		},
+		loadListaCorreccionesByPreguntasCreadasEditadas: (parent, args, {models})=> {
+			return models.User.findById(args.usuario, "roles")
+				.then(rolUsuario => {
+					if (rolUsuario.roles[0].rol === "moderador"){
+						return models.discusionPregunta.find({"pregunta_ID": args.idPregunta,
+							"estado_correccion.rol": "usuario",
+							$or: [
+								{"estado_correccion.asignacion": "creado"},
+								{"estado_correccion.asignacion": "editado"}
+							]})
+							.populate("etiquetas_correcciones")
+							.populate("creador_correccion")
+							.populate("pregunta_ID")
+							.populate("estado_correccion.usuario_creador_estado")
+							.limit(args.limit)
+							.then(listadoCorreccionesPregunta => {
+								return listadoCorreccionesPregunta;
+							}).catch(error => {
+								if (error) {
+									throw new Error(error);
+								}
+							});
+					}else{
+						throw new Error("this users is not member committe, so you can't get this information");
+					}
+				})
+				.catch(error => {
+					if (error) {
 						throw new Error(error);
 					}
 				});

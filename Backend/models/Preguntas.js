@@ -24,6 +24,14 @@ const PreguntaSchema = new Schema({
 	imagen: {type: String, default: "no image"},
 	fecha_creacion:{type: Date, index: true},
 	fecha_cierre: {type: Date, index:true},
+	estados_asignados:[{
+		usuario:{
+			type: Schema.Types.ObjectId,
+			ref: "usuario"
+		},
+		estado_asignado: String,
+		observacion: String
+	}],
 	estado:{type: String, index: true, default: "revision"},
 	tipoPregunta: {type: String, default: "open answer"},
 	areaconocimiento:[{
