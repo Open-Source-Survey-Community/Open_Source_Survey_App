@@ -35,7 +35,7 @@ exports.default = {
 					var hasNextPage = new Promise(function (resolve, reject) {
 						if (endCursor) {
 							var cursorFinal = parseInt(Buffer.from(endCursor, "base64").toString("ascii"));
-							models.discusionPregunta.where("identificador").gt(cursorFinal).count({}, function (err, count) {
+							models.discusionPregunta.where("identificador").gt(cursorFinal).count({ pregunta_ID: args.idPregunta }, function (err, count) {
 								if (err) {
 									reject(err);
 								}
@@ -55,7 +55,7 @@ exports.default = {
 				});
 			});
 			var totalPagesPromise = new Promise(function (resolve, reject) {
-				models.discusionPregunta.count(function (err, count) {
+				models.discusionPregunta.count({ pregunta_ID: args.idPregunta }, function (err, count) {
 					if (err) {
 						reject(err);
 					} else {
@@ -172,11 +172,81 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
+		},
+		loadListaCorreccionesPreguntasByEstado: function loadListaCorreccionesPreguntasByEstado(parent, args, _ref7) {
+			var models = _ref7.models;
+
+			var edgeDiscusionPreguntaArray = [];
+			var cursor = parseInt(Buffer.from(args.after, "base64").toString("ascii"));
+			if (!cursor) {
+				cursor = 0;
+			}
+			if (!args.limit) {
+				args.limit = 5;
+			}
+			var edgeDiscusionPreguntaInfoPromise = new Promise(function (resolve, reject) {
+				var edges = models.discusionPregunta.find({ identificador: { $gt: cursor }, pregunta_ID: args.idPregunta,
+					"estado_correccion.asignacion": args.estado }, function (err, result) {
+					if (err) {
+						reject(err);
+					}
+				}).populate("creador_correccion").populate("etiquetas_correcciones").populate("estado_correccion.usuario_creador_estado").limit(args.limit).cursor();
+
+				edges.on("data", function (res) {
+					edgeDiscusionPreguntaArray.push({
+						cursor: Buffer.from(res.identificador.toString()).toString("base64"),
+						node: res
+					});
+				});
+				edges.on("end", function () {
+					var endCursor = edgeDiscusionPreguntaArray.length > 0 ? edgeDiscusionPreguntaArray[edgeDiscusionPreguntaArray.length - 1].cursor : NaN;
+					var hasNextPage = new Promise(function (resolve, reject) {
+						if (endCursor) {
+							var cursorFinal = parseInt(Buffer.from(endCursor, "base64").toString("ascii"));
+							models.discusionPregunta.where("identificador").gt(cursorFinal).count({ pregunta_ID: args.idPregunta, "estado_correccion.asignacion": args.estado }, function (err, count) {
+								if (err) {
+									reject(err);
+								}
+								count > 0 ? resolve(true) : resolve(false);
+							});
+						} else {
+							resolve(false);
+						}
+					});
+					resolve({
+						edges: edgeDiscusionPreguntaArray,
+						pageInfo: {
+							endCursor: endCursor,
+							hasnextPage: hasNextPage
+						}
+					});
+				});
+			});
+			var totalPagesPromise = new Promise(function (resolve, reject) {
+				models.discusionPregunta.count({ pregunta_ID: args.idPregunta, "estado_correccion.asignacion": args.estado }, function (err, count) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(count);
+					}
+				});
+			});
+			var listPaginateDiscusionPregunta = Promise.all([edgeDiscusionPreguntaInfoPromise, totalPagesPromise]).then(function (values) {
+				return {
+					edges: values[0].edges,
+					totalCount: values[1],
+					pageInfo: {
+						endCursor: values[0].pageInfo.endCursor,
+						hasnextPage: values[0].pageInfo.hasnextPage
+					}
+				};
+			});
+			return listPaginateDiscusionPregunta;
 		}
 	},
 	Mutation: {
-		nuevaDiscusionPregunta: function nuevaDiscusionPregunta(parent, args, _ref7) {
-			var models = _ref7.models;
+		nuevaDiscusionPregunta: function nuevaDiscusionPregunta(parent, args, _ref8) {
+			var models = _ref8.models;
 
 			return models.discusionPregunta.findOne({ titulo: args.discusionPregunta.titulo }).then(function (discusionPregunta) {
 				if (discusionPregunta) {
@@ -212,8 +282,8 @@ exports.default = {
 				}
 			});
 		},
-		editarDiscusionPregunta: function editarDiscusionPregunta(parent, args, _ref8) {
-			var models = _ref8.models;
+		editarDiscusionPregunta: function editarDiscusionPregunta(parent, args, _ref9) {
+			var models = _ref9.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -241,8 +311,8 @@ exports.default = {
 				}
 			});
 		},
-		eliminarDiscusionPregunta: function eliminarDiscusionPregunta(parent, args, _ref9) {
-			var models = _ref9.models;
+		eliminarDiscusionPregunta: function eliminarDiscusionPregunta(parent, args, _ref10) {
+			var models = _ref10.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -266,8 +336,8 @@ exports.default = {
 				}
 			});
 		},
-		editarMyDiscusionPreguntaByTitulo: function editarMyDiscusionPreguntaByTitulo(parent, args, _ref10) {
-			var models = _ref10.models;
+		editarMyDiscusionPreguntaByTitulo: function editarMyDiscusionPreguntaByTitulo(parent, args, _ref11) {
+			var models = _ref11.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -301,8 +371,8 @@ exports.default = {
 				}
 			});
 		},
-		editarMyDiscusionPreguntaByDescripcion: function editarMyDiscusionPreguntaByDescripcion(parent, args, _ref11) {
-			var models = _ref11.models;
+		editarMyDiscusionPreguntaByDescripcion: function editarMyDiscusionPreguntaByDescripcion(parent, args, _ref12) {
+			var models = _ref12.models;
 
 			return models.discusionPregunta.findOne({ "_id": args.idDiscusionPregunta, "estado_correccion.rol": "usuario" }, { "estado_correccion.$": 1 }).then(function (discusionPregunta) {
 				if (discusionPregunta.estado_correccion[0].asignacion === "pendiente") {
@@ -336,8 +406,8 @@ exports.default = {
 				}
 			});
 		},
-		aprobarEstadoMyDiscusionPregunta: function aprobarEstadoMyDiscusionPregunta(parent, args, _ref12) {
-			var models = _ref12.models;
+		aprobarEstadoMyDiscusionPregunta: function aprobarEstadoMyDiscusionPregunta(parent, args, _ref13) {
+			var models = _ref13.models;
 
 			return models.discusionPregunta.findById(args.idDiscusionPregunta).then(function (documentoDiscusionPregunta) {
 				if (documentoDiscusionPregunta.habilitada) {

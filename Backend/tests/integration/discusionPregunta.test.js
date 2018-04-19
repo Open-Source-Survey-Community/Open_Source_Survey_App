@@ -926,5 +926,32 @@ describe("Acciones de consulta del modelo de discusiones de Pregunta", function 
 			});
 
 	});
+	it("Deberia poder ver el listado de las discusiones de preguntas por estado", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query loadListaCorreccionesPreguntasByEstado($idPregunta: String, $estado: String, $limit: Int, $after: String){
+							loadListaCorreccionesPreguntasByEstado(idPregunta: $idPregunta, estado: $estado, limit: $limit, after: $after){
+							 					totalCount
+							 					pageInfo{
+							 						endCursor
+							 						hasnextPage
+							 					}	
+							 				}				
+						}`,
+				variables: {
+					idPregunta: "5acde1c58cdf5a5284349714",
+					estado: "editado",
+					after:"",
+					limit: 10
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.loadListaCorreccionesPreguntasByEstado.totalCount).toBe(0);
+				done();
+			});
+	});
+
 
 });

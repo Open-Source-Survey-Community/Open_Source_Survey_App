@@ -78,6 +78,15 @@ const DiscusionPregunta = `
 		##las correcciones referentes a una pregunta que han sido creadas, o han sido actualizadas
 		##esta accion es solo mostrada para los moderadores
 		loadListaCorreccionesByPreguntasCreadasEditadas(idPregunta: String, usuario: String, limit: Int): [DiscusionPregunta]
+		
+		##Mostrar informacion paginada de las correcciones de preguntas, por los 5 posibles estados 
+		## Estados de una correccion de pregunta
+		##Creado:Lista de correcciones de preguntas que han sido recien creadas
+		##Editado:Lista de correcciones de preguntas que han sido editadas
+		##Pendiente:Lista de correcciones de preguntas que han sido aceptada por un moderador y que esperan la correccion del usuario
+		##Cerrado: Lista de correcciones de preguntas que han sido rechazadas por un moderador
+		##Resuelto: Lista de correcciones de preguntas que han sido marcadas como resueltas por el creador de la correccion pregunta
+		loadListaCorreccionesPreguntasByEstado(idPregunta: String, estado: String,limit: Int, after: String): DiscusionPreguntaConnection
 	
 	}
 	

@@ -31,7 +31,7 @@ export default {
 					let hasNextPage = new Promise((resolve, reject)=> {
 						if (endCursor) {
 							let cursorFinal = parseInt(Buffer.from(endCursor,"base64").toString("ascii"));
-							models.discusionPregunta.where("identificador").gt(cursorFinal).count({},(err, count)=> {
+							models.discusionPregunta.where("identificador").gt(cursorFinal).count({pregunta_ID: args.idPregunta},(err, count)=> {
 								if (err) {
 									reject(err);
 								}
@@ -52,7 +52,7 @@ export default {
 				});
 			});
 			let totalPagesPromise = new Promise((resolve, reject) => {
-				models.discusionPregunta.count((err, count) => {
+				models.discusionPregunta.count({pregunta_ID: args.idPregunta},(err, count) => {
 					if (err) {
 						reject(err);
 					}else {
@@ -190,6 +190,79 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		loadListaCorreccionesPreguntasByEstado: (parent, args, {models}) => {
+			let edgeDiscusionPreguntaArray = [];
+			let cursor = parseInt(Buffer.from(args.after, "base64").toString("ascii"));
+			if (!cursor){
+				cursor = 0;
+			}
+			if(!args.limit){
+				args.limit = 5;
+			}
+			let edgeDiscusionPreguntaInfoPromise = new Promise((resolve, reject)=> {
+				let edges = models.discusionPregunta.find({identificador:{$gt:cursor},pregunta_ID: args.idPregunta,
+					"estado_correccion.asignacion" : args.estado}, (err, result) => {
+					if(err){
+						reject(err);
+					}
+				}).populate("creador_correccion")
+					.populate("etiquetas_correcciones")
+					.populate("estado_correccion.usuario_creador_estado")
+					.limit(args.limit).cursor();
+
+				edges.on("data", res => {
+					edgeDiscusionPreguntaArray.push({
+						cursor : Buffer.from((res.identificador).toString()).toString("base64"),
+						node: res
+					});
+				});
+				edges.on("end",()=> {
+					let endCursor = edgeDiscusionPreguntaArray.length > 0 ? edgeDiscusionPreguntaArray[edgeDiscusionPreguntaArray.length - 1].cursor:NaN;
+					let hasNextPage = new Promise((resolve, reject)=> {
+						if (endCursor) {
+							let cursorFinal = parseInt(Buffer.from(endCursor,"base64").toString("ascii"));
+							models.discusionPregunta.where("identificador").gt(cursorFinal)
+								.count({pregunta_ID: args.idPregunta,"estado_correccion.asignacion":args.estado},(err, count)=> {
+									if (err) {
+										reject(err);
+									}
+									count > 0 ? resolve(true): resolve(false);
+								});
+
+						} else {
+							resolve(false);
+						}
+					});
+					resolve({
+						edges: edgeDiscusionPreguntaArray,
+						pageInfo: {
+							endCursor: endCursor,
+							hasnextPage: hasNextPage
+						}
+					});
+				});
+			});
+			let totalPagesPromise = new Promise((resolve, reject) => {
+				models.discusionPregunta.count({pregunta_ID: args.idPregunta,"estado_correccion.asignacion":args.estado},(err, count) => {
+					if (err) {
+						reject(err);
+					}else {
+						resolve(count);
+					}
+				});
+			});
+			let listPaginateDiscusionPregunta = Promise.all([edgeDiscusionPreguntaInfoPromise, totalPagesPromise]).then((values) => {
+				return {
+					edges: values[0].edges,
+					totalCount: values[1],
+					pageInfo:{
+						endCursor: values[0].pageInfo.endCursor,
+						hasnextPage:values[0].pageInfo.hasnextPage
+					}
+				};
+			});
+			return listPaginateDiscusionPregunta;
 		}
 	},
 	Mutation: {
