@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+
 export default {
 	Query: {
 		verMyPreguntaActual: (parent, args, {models}) => {
@@ -220,6 +221,16 @@ export default {
 								throw new Error(error);
 							}
 						});
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
+		},
+		listadoAreasConocimientosUsadasPreguntas: (parent, args, {models}) => {
+			return models.areasConocimiento.distinct("titulo")
+				.then(listaAreasConocimientosUsadas=>{
+					return listaAreasConocimientosUsadas;
 				}).catch(error => {
 					if (error){
 						throw new Error(error);

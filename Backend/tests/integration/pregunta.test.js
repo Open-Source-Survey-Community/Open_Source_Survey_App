@@ -607,6 +607,22 @@ describe("Consultas al modelo Pregunta", function (){
 				done();
 			});
 	});
+	it("Deberia poder ver la lista de las areas conocimientos que se han usado en una pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query listadoAreasConocimientosUsadasPreguntas{
+							  listadoAreasConocimientosUsadasPreguntas{
+							 					titulo
+							 				}				
+						}`
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.listadoAreasConocimientosUsadasPreguntas.length).toBe(2);
+				done();
+			});
+	});
 	it("Deberia no poder ver la informacion de un usuario, si no provee un identificador " +
 		"de la pregunta", function (done) {
 		self

@@ -423,6 +423,16 @@ describe("Consultas al modelo Pregunta", function () {
 			done();
 		});
 	});
+	it("Deberia poder ver la lista de las areas conocimientos que se han usado en una pregunta", function (done) {
+		self.test(JSON.stringify({
+			query: "query listadoAreasConocimientosUsadasPreguntas{\n\t\t\t\t\t\t\t  listadoAreasConocimientosUsadasPreguntas{\n\t\t\t\t\t\t\t \t\t\t\t\ttitulo\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}"
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.listadoAreasConocimientosUsadasPreguntas.length).toBe(2);
+			done();
+		});
+	});
 	it("Deberia no poder ver la informacion de un usuario, si no provee un identificador " + "de la pregunta", function (done) {
 		self.test(JSON.stringify({
 			query: "query verMyPreguntaActual($idPregunta: String!){\n\t\t\t\t\t\t\t  verMyPreguntaActual(idPregunta: $idPregunta){\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t\timagen\n\t\t\t\t\t\t\t \t\t\t\t\testado\t\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
