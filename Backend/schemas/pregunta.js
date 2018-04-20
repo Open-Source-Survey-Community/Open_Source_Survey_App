@@ -12,6 +12,7 @@ const Pregunta = `
 				estado: String
 				tipoPregunta: String
 				areaconocimiento: [AreaConocimiento]
+				discusiones: [DiscusionPregunta]
 				respuestas: [String]
 			
 			}
@@ -37,6 +38,7 @@ const Pregunta = `
 				listadoPreguntasActuales(after: String,limit: Int, word: String): PreguntaConnection
 				listadoPreguntasActualesByEstado(after: String, limit: Int, word: String, estado: String): PreguntaConnection
 				historialImagenesUsadasByUserinAPregunta(idUsuario: String,idPregunta: String): Pregunta
+				listadoUsuariosDistintosCreadoPreguntas :[Usuario]
 				
 			}
 			input PreguntaInput{

@@ -750,6 +750,24 @@ describe("Consultas al modelo Pregunta", function (){
 			});
 		
 	});
+	it("Deberia poder ver el listado de los usuarios distintos que han creado preguntas", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query listadoUsuariosDistintosCreadoPreguntas{
+							  listadoUsuariosDistintosCreadoPreguntas{
+							 					nombre
+							 					correo
+							 				}				
+						}`,
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.listadoUsuariosDistintosCreadoPreguntas.length).toBe(1);
+				done();
+			});
+
+	});
 	it("Deberia no poder ver el listado de las preguntas de un usuarios si, no envio un identificador del usuario ", function (done) {
 		self
 			.test(JSON.stringify({

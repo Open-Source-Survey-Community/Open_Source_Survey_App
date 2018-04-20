@@ -208,6 +208,23 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		listadoUsuariosDistintosCreadoPreguntas: (parent, args, {models}) => {
+			return models.Pregunta.distinct("usuario_ID")
+				.then(listaUsuariosDistintos => {
+					return models.User.find({"_id":{$in:listaUsuariosDistintos}})
+						.then(listaUsuarios => {
+							return listaUsuarios;
+						}).catch(error => {
+							if (error){
+								throw new Error(error);
+							}
+						});
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
 		}
 	},
 	Mutation: {
