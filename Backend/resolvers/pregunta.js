@@ -7,6 +7,7 @@ export default {
 				registroActual: true })
 				.populate("usuario_ID")
 				.populate("areaconocimiento")
+				.populate("discusiones")
 				.then(pregunta => {
 					return pregunta;
 				}).catch(error=> {
@@ -30,6 +31,7 @@ export default {
 					}
 				}).populate("usuario_ID")
 					.populate("areaconocimiento")
+					.populate("discusiones")
 					.limit(args.limit).cursor();
 
 				edges.on("data", res => {
@@ -64,7 +66,7 @@ export default {
 				});
 			});
 			let totalPagesPromise = new Promise((resolve, reject) => {
-				models.Pregunta.count((err, count) => {
+				models.Pregunta.count({registroActual:true},(err, count) => {
 					if (err) {
 						reject(err);
 					}else {
@@ -89,6 +91,8 @@ export default {
 				return models.Pregunta.find({usuario_ID: args.idUsuario, registroActual: true})
 					.populate("usuario_ID")
 					.populate("areaconocimiento")
+					.populate("discusiones")
+					.sort({"fecha_creacion":-1})
 					.then(listadoMisPreguntas => {
 						return listadoMisPreguntas;
 					})
@@ -114,6 +118,8 @@ export default {
 				return models.Pregunta.find({usuario_ID: args.idUsuario, registroActual: true, estado: estado})
 					.populate("usuario_ID")
 					.populate("areaconocimiento")
+					.populate("discusiones")
+					.sort({"fecha_creacion":-1})
 					.then(listadoPreguntas => {
 						return listadoPreguntas;
 					}).catch(error => {
@@ -140,6 +146,7 @@ export default {
 					}
 				}).populate("usuario_ID")
 					.populate("areaconocimiento")
+					.populate("discusiones")
 					.limit(args.limit).cursor();
 
 				edges.on("data", res => {
@@ -236,6 +243,76 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		cargarListadoPreguntasByAreasConocimiento: (parent, args, {models})=>{
+			let edgePreguntaArray = [];
+			let cursor = parseInt(Buffer.from(args.after, "base64").toString("ascii"));
+			if (!cursor){
+				cursor = 0;
+			}
+			let edgePreguntaInfoPromise = new Promise((resolve, reject)=> {
+				let edges = models.Pregunta.find({identificador:{$gt:cursor},registroActual: true,
+					descripcion: new RegExp(args.word, "i"),areaconocimiento: args.idAreaConocimiento}, (err, result) => {
+					if(err){
+						reject(err);
+					}
+				}).populate("usuario_ID")
+					.populate("areaconocimiento")
+					.populate("discusiones")
+					.limit(args.limit).cursor();
+
+				edges.on("data", res => {
+					edgePreguntaArray.push({
+						cursor : Buffer.from((res.identificador).toString()).toString("base64"),
+						node: res
+					});
+				});
+				edges.on("end",()=> {
+					let endCursor = edgePreguntaArray.length > 0 ? edgePreguntaArray[edgePreguntaArray.length - 1].cursor:NaN;
+					let hasNextPage = new Promise((resolve, reject)=> {
+						if (endCursor) {
+							let cursorFinal = parseInt(Buffer.from(endCursor,"base64").toString("ascii"));
+							models.Pregunta.where("identificador").gt(cursorFinal).count({registroActual:true,
+								areaconocimiento: args.idAreaConocimiento},(err, count)=> {
+								if (err) {
+									reject(err);
+								}
+								count > 0 ? resolve(true): resolve(false);
+							});
+
+						} else {
+							resolve(false);
+						}
+					});
+					resolve({
+						edges: edgePreguntaArray,
+						pageInfo: {
+							endCursor: endCursor,
+							hasnextPage: hasNextPage
+						}
+					});
+				});
+			});
+			let totalPagesPromise = new Promise((resolve, reject) => {
+				models.Pregunta.count({areaconocimiento: args.idAreaConocimiento,registroActual:true},(err, count) => {
+					if (err) {
+						reject(err);
+					}else {
+						resolve(count);
+					}
+				});
+			});
+			let listPaginatePregunta = Promise.all([edgePreguntaInfoPromise, totalPagesPromise]).then((values) => {
+				return {
+					edges: values[0].edges,
+					totalCount: values[1],
+					pageInfo:{
+						endCursor: values[0].pageInfo.endCursor,
+						hasnextPage:values[0].pageInfo.hasnextPage
+					}
+				};
+			});
+			return listPaginatePregunta;
 		}
 	},
 	Mutation: {

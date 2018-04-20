@@ -40,6 +40,7 @@ const Pregunta = `
 				historialImagenesUsadasByUserinAPregunta(idUsuario: String,idPregunta: String): Pregunta
 				listadoUsuariosDistintosCreadoPreguntas :[Usuario]
 				listadoAreasConocimientosUsadasPreguntas: [AreaConocimiento]
+				cargarListadoPreguntasByAreasConocimiento(after: String,limit: Int, word: String,idAreaConocimiento: String): PreguntaConnection
 				
 			}
 			input PreguntaInput{

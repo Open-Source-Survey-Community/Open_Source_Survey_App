@@ -423,6 +423,22 @@ describe("Consultas al modelo Pregunta", function () {
 			done();
 		});
 	});
+	it("Deberia poder cargar la lista de preguntas, segun el area de conocimiento", function (done) {
+		self.test(JSON.stringify({
+			query: "query cargarListadoPreguntasByAreasConocimiento($after: String, $limit: Int,$word: String,$idAreaConocimiento: String ){\n\t\t\t\t\t\t\t  cargarListadoPreguntasByAreasConocimiento(after: $after, limit: $limit, word: $word, idAreaConocimiento:$idAreaConocimiento){\n\t\t\t\t\t\t\t \t\t\t\t\ttotalCount\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
+			variables: {
+				after: "",
+				limit: 5,
+				word: "",
+				idAreaConocimiento: "5ac8e07bd3fe0e46a4a06085"
+			}
+		})).then(function (response) {
+			expect(response.status).toBe(200);
+			expect(response.success).toBe(true);
+			expect(response.data.cargarListadoPreguntasByAreasConocimiento.totalCount).toBe(4);
+			done();
+		});
+	});
 	it("Deberia poder ver la lista de las areas conocimientos que se han usado en una pregunta", function (done) {
 		self.test(JSON.stringify({
 			query: "query listadoAreasConocimientosUsadasPreguntas{\n\t\t\t\t\t\t\t  listadoAreasConocimientosUsadasPreguntas{\n\t\t\t\t\t\t\t \t\t\t\t\ttitulo\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}"

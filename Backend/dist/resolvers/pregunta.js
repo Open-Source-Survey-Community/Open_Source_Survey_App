@@ -11,7 +11,7 @@ exports.default = {
 			var models = _ref.models;
 
 			return models.Pregunta.findOne({ _id: args.idPregunta,
-				registroActual: true }).populate("usuario_ID").populate("areaconocimiento").then(function (pregunta) {
+				registroActual: true }).populate("usuario_ID").populate("areaconocimiento").populate("discusiones").then(function (pregunta) {
 				return pregunta;
 			}).catch(function (error) {
 				if (error) {
@@ -33,7 +33,7 @@ exports.default = {
 					if (err) {
 						reject(err);
 					}
-				}).populate("usuario_ID").populate("areaconocimiento").limit(args.limit).cursor();
+				}).populate("usuario_ID").populate("areaconocimiento").populate("discusiones").limit(args.limit).cursor();
 
 				edges.on("data", function (res) {
 					edgePreguntaArray.push({
@@ -66,7 +66,7 @@ exports.default = {
 				});
 			});
 			var totalPagesPromise = new Promise(function (resolve, reject) {
-				models.Pregunta.count(function (err, count) {
+				models.Pregunta.count({ registroActual: true }, function (err, count) {
 					if (err) {
 						reject(err);
 					} else {
@@ -90,7 +90,7 @@ exports.default = {
 			var models = _ref3.models;
 
 			if (args.idUsuario) {
-				return models.Pregunta.find({ usuario_ID: args.idUsuario, registroActual: true }).populate("usuario_ID").populate("areaconocimiento").then(function (listadoMisPreguntas) {
+				return models.Pregunta.find({ usuario_ID: args.idUsuario, registroActual: true }).populate("usuario_ID").populate("areaconocimiento").populate("discusiones").sort({ "fecha_creacion": -1 }).then(function (listadoMisPreguntas) {
 					return listadoMisPreguntas;
 				}).catch(function (error) {
 					if (error) {
@@ -111,7 +111,7 @@ exports.default = {
 				} else {
 					estado = args.estado;
 				}
-				return models.Pregunta.find({ usuario_ID: args.idUsuario, registroActual: true, estado: estado }).populate("usuario_ID").populate("areaconocimiento").then(function (listadoPreguntas) {
+				return models.Pregunta.find({ usuario_ID: args.idUsuario, registroActual: true, estado: estado }).populate("usuario_ID").populate("areaconocimiento").populate("discusiones").sort({ "fecha_creacion": -1 }).then(function (listadoPreguntas) {
 					return listadoPreguntas;
 				}).catch(function (error) {
 					if (error) {
@@ -136,7 +136,7 @@ exports.default = {
 					if (err) {
 						reject(err);
 					}
-				}).populate("usuario_ID").populate("areaconocimiento").limit(args.limit).cursor();
+				}).populate("usuario_ID").populate("areaconocimiento").populate("discusiones").limit(args.limit).cursor();
 
 				edges.on("data", function (res) {
 					edgePreguntaArray.push({
@@ -231,11 +231,79 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
+		},
+		cargarListadoPreguntasByAreasConocimiento: function cargarListadoPreguntasByAreasConocimiento(parent, args, _ref9) {
+			var models = _ref9.models;
+
+			var edgePreguntaArray = [];
+			var cursor = parseInt(Buffer.from(args.after, "base64").toString("ascii"));
+			if (!cursor) {
+				cursor = 0;
+			}
+			var edgePreguntaInfoPromise = new Promise(function (resolve, reject) {
+				var edges = models.Pregunta.find({ identificador: { $gt: cursor }, registroActual: true,
+					descripcion: new RegExp(args.word, "i"), areaconocimiento: args.idAreaConocimiento }, function (err, result) {
+					if (err) {
+						reject(err);
+					}
+				}).populate("usuario_ID").populate("areaconocimiento").populate("discusiones").limit(args.limit).cursor();
+
+				edges.on("data", function (res) {
+					edgePreguntaArray.push({
+						cursor: Buffer.from(res.identificador.toString()).toString("base64"),
+						node: res
+					});
+				});
+				edges.on("end", function () {
+					var endCursor = edgePreguntaArray.length > 0 ? edgePreguntaArray[edgePreguntaArray.length - 1].cursor : NaN;
+					var hasNextPage = new Promise(function (resolve, reject) {
+						if (endCursor) {
+							var cursorFinal = parseInt(Buffer.from(endCursor, "base64").toString("ascii"));
+							models.Pregunta.where("identificador").gt(cursorFinal).count({ registroActual: true,
+								areaconocimiento: args.idAreaConocimiento }, function (err, count) {
+								if (err) {
+									reject(err);
+								}
+								count > 0 ? resolve(true) : resolve(false);
+							});
+						} else {
+							resolve(false);
+						}
+					});
+					resolve({
+						edges: edgePreguntaArray,
+						pageInfo: {
+							endCursor: endCursor,
+							hasnextPage: hasNextPage
+						}
+					});
+				});
+			});
+			var totalPagesPromise = new Promise(function (resolve, reject) {
+				models.Pregunta.count({ areaconocimiento: args.idAreaConocimiento, registroActual: true }, function (err, count) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(count);
+					}
+				});
+			});
+			var listPaginatePregunta = Promise.all([edgePreguntaInfoPromise, totalPagesPromise]).then(function (values) {
+				return {
+					edges: values[0].edges,
+					totalCount: values[1],
+					pageInfo: {
+						endCursor: values[0].pageInfo.endCursor,
+						hasnextPage: values[0].pageInfo.hasnextPage
+					}
+				};
+			});
+			return listPaginatePregunta;
 		}
 	},
 	Mutation: {
-		crearPregunta: function crearPregunta(parent, args, _ref9) {
-			var models = _ref9.models;
+		crearPregunta: function crearPregunta(parent, args, _ref10) {
+			var models = _ref10.models;
 
 			if (args.pregunta.descripcion && args.pregunta.usuario_ID && args.pregunta.areaconocimiento.length > 0) {
 				return models.Pregunta.count().then(function (existenPreguntasCreadas) {
@@ -259,8 +327,8 @@ exports.default = {
 				throw new Error("there is empties fields, is not possible save a new question");
 			}
 		},
-		editarPregunta: function editarPregunta(parent, args, _ref10) {
-			var models = _ref10.models;
+		editarPregunta: function editarPregunta(parent, args, _ref11) {
+			var models = _ref11.models;
 
 			return models.Pregunta.findById(args.idPregunta).then(function (documento) {
 				if (documento.usuario_ID == args.pregunta.usuario_ID) {
@@ -301,8 +369,8 @@ exports.default = {
 				}
 			});
 		},
-		eliminarPregunta: function eliminarPregunta(parent, args, _ref11) {
-			var models = _ref11.models;
+		eliminarPregunta: function eliminarPregunta(parent, args, _ref12) {
+			var models = _ref12.models;
 
 			return models.User.findOne({ correo: args.correoUsuario }, "_id").then(function (idUsuario) {
 				return models.Pregunta.findOne({ _id: args.idPregunta, usuario_ID: idUsuario }).then(function (documentoPregunta) {
@@ -328,8 +396,8 @@ exports.default = {
 				}
 			});
 		},
-		rollbackPreguntaAnterior: function rollbackPreguntaAnterior(parent, args, _ref12) {
-			var models = _ref12.models;
+		rollbackPreguntaAnterior: function rollbackPreguntaAnterior(parent, args, _ref13) {
+			var models = _ref13.models;
 
 			return models.Pregunta.findOne({ "_id": args.idPregunta,
 				"historial_cambios._id": args.idPreguntaAnterior }, { "historial_cambios.$": 1, "estado": 1 }).populate("usuario_ID").then(function (preguntaAnterior) {
@@ -362,8 +430,8 @@ exports.default = {
 				}
 			});
 		},
-		rollbackDescripcionPregunta: function rollbackDescripcionPregunta(parent, args, _ref13) {
-			var models = _ref13.models;
+		rollbackDescripcionPregunta: function rollbackDescripcionPregunta(parent, args, _ref14) {
+			var models = _ref14.models;
 
 			return models.Pregunta.findOne({ "_id": args.idPregunta,
 				"historial_cambios._id": args.idPreguntaAnterior }, { "historial_cambios.$": 1, "estado": 1 }).populate("usuario_ID").then(function (preguntaAnterior) {
@@ -390,8 +458,8 @@ exports.default = {
 				}
 			});
 		},
-		rollbackRespuestasPregunta: function rollbackRespuestasPregunta(parent, args, _ref14) {
-			var models = _ref14.models;
+		rollbackRespuestasPregunta: function rollbackRespuestasPregunta(parent, args, _ref15) {
+			var models = _ref15.models;
 
 			return models.Pregunta.findOne({ "_id": args.idPregunta,
 				"historial_cambios._id": args.idPreguntaAnterior }, { "historial_cambios.$": 1, "estado": 1 }).populate("usuario_ID").then(function (preguntaAnterior) {
@@ -418,8 +486,8 @@ exports.default = {
 				}
 			});
 		},
-		rollbackImagenPregunta: function rollbackImagenPregunta(parent, args, _ref15) {
-			var models = _ref15.models;
+		rollbackImagenPregunta: function rollbackImagenPregunta(parent, args, _ref16) {
+			var models = _ref16.models;
 
 			return models.Pregunta.findOne({ "_id": args.idPregunta,
 				"historial_cambios._id": args.idPreguntaAnterior }, { "historial_cambios.$": 1, "estado": 1 }).populate("usuario_ID").then(function (preguntaAnterior) {
