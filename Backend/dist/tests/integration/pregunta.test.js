@@ -17,7 +17,7 @@ describe("Escenario Crear pregunta", function () {
 			query: "mutation crearPregunta($pregunta: PreguntaInput ){\n\t\t\t\t\t\t\tcrearPregunta(pregunta: $pregunta){\n\t\t\t\t\t\t\t \t\t\t\t\t_id\n\t\t\t\t\t\t\t \t\t\t\t\tdescripcion\n\t\t\t\t\t\t\t \t\t\t\t\timagen\n\t\t\t\t\t\t\t \t\t\t\t\tidentificador\n\t\t\t\t\t\t\t \t\t\t\t\testado\t\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
 			variables: {
 				pregunta: {
-					descripcion: "Pregunta con respuesta de casilla de verificacion",
+					descripcion: "Pregunta con respuesta de casilla de verificacion 111",
 					usuario_ID: "5ac248c98a3f74223f16895e",
 					imagen: "imagen de casilla de verificacion",
 					fecha_creacion: new Date(),

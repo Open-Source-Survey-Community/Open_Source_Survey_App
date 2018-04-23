@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import async from "async";
 
 export default {
 	Query: {
@@ -564,7 +565,63 @@ export default {
 					}
 				});
 
-		}
+		},
+		asignarPreguntasAMiembroComite: (parent, args, {models}) => {
+			return	models.User.findById(args.idUsuario)
+				.then(registroUsuario => {
+					if(registroUsuario.roles[0].rol === "comite"){
+						return new Promise((resolve, reject)=>{
+							async.eachSeries(args.arrayPreguntas, (item, next)=>{
+								return	models.Pregunta.findById(item)
+									.populate("usuario_ID")
+									.populate("areaconocimiento")
+									.then(registroPregunta => {
+										if(registroPregunta.usuario_ID._id == args.idUsuario){
+											reject("the user " + registroPregunta.usuario_ID.nombre + " already create " +
+												"this questions, with title" + registroPregunta.descripcion + "so, can't" +
+												"accept or revoque a question that the same create!");
+										}else if(registroPregunta.estados_asignados.length ||
+											registroPregunta.estados_asignados.usuario == args.idUsuario){
+											reject("Already exist a user assigned to this questions, you can't assign" +
+												"to more one people ");
+										}
+										else {
+											return	models.Pregunta.findByIdAndUpdate(item,{
+												$push: {estados_asignados:{usuario:args.idUsuario,
+													estado_asignado: "revisor",
+													observacion: "A committe member need put a short description about your decision",
+													fecha_asignacion: new Date}}
+											},{new: true}).then(preguntaActualizada => {
+												if (preguntaActualizada){
+													next();
+												}
+											});
+										}
 
+									}).catch(error => {
+										if (error){
+											throw new Error(error);
+										}
+									});
+
+							},(error)=>{
+								if (error){
+									throw new Error(error);
+								}
+								resolve(true);
+							});
+
+						});
+
+
+
+					}else{
+						throw new Error("this user isn't committe member, so that you can't assign this question");
+					}
+				}).catch(error => {
+					throw new Error(error);
+
+				});
+		}
 	}
 };

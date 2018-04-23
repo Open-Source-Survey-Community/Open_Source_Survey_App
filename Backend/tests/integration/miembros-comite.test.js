@@ -239,5 +239,28 @@ describe("Acciones del modereador(miembros del comite) hacia la correccion de un
 				done();
 			});
 	});
+	it("Deberia poder asignar un delegado a un conjunto de pregunta, siendo" +
+		"un usuario miembro del comite", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation asignarPreguntasAMiembroComite($idUsuario: String, 
+																	$arrayPreguntas: [ID!]){
+							asignarPreguntasAMiembroComite(idUsuario: $idUsuario,
+															arrayPreguntas: $arrayPreguntas)
+								
+				}`,
+				variables: {
+					idUsuario:"5ac24c758e4a6a23d4869ac7",
+					arrayPreguntas: ["5addfc4dff628f04be5dcc97","5addfc54ff628f04be5dcc98","5addfc5aff628f04be5dcc99"]
+				}
+			}))
+			.then(response => {
+				console.log(response);
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.asignarPreguntasAMiembroComite).toBe(true);
+				done();
+			});
+	});
 
 });

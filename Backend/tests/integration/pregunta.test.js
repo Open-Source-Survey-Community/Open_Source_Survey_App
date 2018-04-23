@@ -24,7 +24,7 @@ describe("Escenario Crear pregunta", function ( ) {
 						}`,
 				variables:{
 					pregunta: {
-						descripcion: "Pregunta con respuesta de casilla de verificacion",
+						descripcion: "Pregunta con respuesta de casilla de verificacion 111",
 						usuario_ID: "5ac248c98a3f74223f16895e",
 						imagen: "imagen de casilla de verificacion",
 						fecha_creacion: new Date(),

@@ -3,7 +3,12 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-/* eslint-disable no-unused-vars */
+
+var _async = require("async");
+
+var _async2 = _interopRequireDefault(_async);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
 	Query: {
@@ -513,8 +518,50 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
-		}
+		},
+		asignarPreguntasAMiembroComite: function asignarPreguntasAMiembroComite(parent, args, _ref17) {
+			var models = _ref17.models;
 
+			return models.User.findById(args.idUsuario).then(function (registroUsuario) {
+				if (registroUsuario.roles[0].rol === "comite") {
+					return new Promise(function (resolve, reject) {
+						_async2.default.eachSeries(args.arrayPreguntas, function (item, next) {
+							return models.Pregunta.findById(item).populate("usuario_ID").populate("areaconocimiento").then(function (registroPregunta) {
+								if (registroPregunta.usuario_ID._id == args.idUsuario) {
+									reject("the user " + registroPregunta.usuario_ID.nombre + " already create " + "this questions, with title" + registroPregunta.descripcion + "so, can't" + "accept or revoque a question that the same create!");
+								} else if (registroPregunta.estados_asignados.length || registroPregunta.estados_asignados.usuario == args.idUsuario) {
+									reject("Already exist a user assigned to this questions, you can't assign" + "to more one people ");
+								} else {
+									return models.Pregunta.findByIdAndUpdate(item, {
+										$push: { estados_asignados: { usuario: args.idUsuario,
+												estado_asignado: "revisor",
+												observacion: "A committe member need put a short description about your decision",
+												fecha_asignacion: new Date() } }
+									}, { new: true }).then(function (preguntaActualizada) {
+										if (preguntaActualizada) {
+											next();
+										}
+									});
+								}
+							}).catch(function (error) {
+								if (error) {
+									throw new Error(error);
+								}
+							});
+						}, function (error) {
+							if (error) {
+								throw new Error(error);
+							}
+							resolve(true);
+						});
+					});
+				} else {
+					throw new Error("this user isn't committe member, so that you can't assign this question");
+				}
+			}).catch(function (error) {
+				throw new Error(error);
+			});
+		}
 	}
-};
+}; /* eslint-disable no-unused-vars */
 //# sourceMappingURL=pregunta.js.map

@@ -7,6 +7,7 @@ const Pregunta = `
 				historial_cambios: [Pregunta]
 				registroActual: Boolean
 				imagen: String
+				estados_asignados:[AsignadoresEstado]
 				fecha_creacion: String
 				fecha_cierre: String
 				estado: String
@@ -15,6 +16,11 @@ const Pregunta = `
 				discusiones: [DiscusionPregunta]
 				respuestas: [String]
 			
+			}
+			type AsignadoresEstado {
+				usuario: Usuario
+				estado_asignado: String
+				observacion: String
 			}
 			
 			type PreguntaConnection {
@@ -62,6 +68,8 @@ const Pregunta = `
 				rollbackDescripcionPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
 				rollbackRespuestasPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
 				rollbackImagenPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
+				asignarEstadoPregunta(idPregunta: String, idUsuario: String, estado: String): Pregunta
+				asignarPreguntasAMiembroComite(idUsuario: String, arrayPreguntas: [ID!]):Boolean
 			}
 			
 			

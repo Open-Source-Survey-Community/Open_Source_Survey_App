@@ -32,7 +32,8 @@ var PreguntaSchema = new Schema({
 			ref: "usuario"
 		},
 		estado_asignado: String,
-		observacion: String
+		observacion: String,
+		fecha_asignacion: { type: Date, index: true }
 	}],
 	estado: { type: String, index: true, default: "revision" },
 	tipoPregunta: { type: String, default: "open answer" },

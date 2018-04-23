@@ -8,6 +8,7 @@ import database from "./config/database.config";
 import models from "./models";
 import {fileLoader, mergeResolvers, mergeTypes} from "merge-graphql-schemas";
 
+
 const bodyParser = require("body-parser");
 const {graphiqlExpress, graphqlExpress} = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
@@ -47,7 +48,9 @@ app.use("/graphql", bodyParser.json(), graphqlExpress({
 	}
 }));
 
+
 app.use("/graphiql",graphiqlExpress({ endpointURL: "/graphql" }));
+
 
 app.use(morgan("dev"));
 
