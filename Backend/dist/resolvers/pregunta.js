@@ -545,12 +545,12 @@ exports.default = {
 								}
 							}).catch(function (error) {
 								if (error) {
-									throw new Error(error);
+									reject(error);
 								}
 							});
 						}, function (error) {
 							if (error) {
-								throw new Error(error);
+								reject(error);
 							}
 							resolve(true);
 						});
@@ -560,6 +560,30 @@ exports.default = {
 				}
 			}).catch(function (error) {
 				throw new Error(error);
+			});
+		},
+		asignarEstadoPregunta: function asignarEstadoPregunta(parent, args, _ref18) {
+			var models = _ref18.models;
+
+			return models.Pregunta.findById(args.idPregunta).then(function (registroPregunta) {
+				if (registroPregunta.usuario_ID == args.idUsuario) {
+					throw new Error("you can't re-assign a state if you" + "are the owner the question");
+				} else if (registroPregunta.estados_asignados[0].usuario == args.idUsuario) {
+					return models.Pregunta.findOneAndUpdate({ _id: args.idPregunta, "estados_asignados.usuario": args.idUsuario }, {
+						$set: { "estado": args.estado, "estados_asignados.$.estado_asignado": args.estado,
+							"estados_asignados.$.observacion": args.observacion }
+					}, { new: true }).then(function (preguntaActualizada) {
+						return preguntaActualizada;
+					}).catch(function (errorActualizar) {
+						throw new Error(errorActualizar);
+					});
+				} else {
+					throw new Error("this users is not be able to assign this state to this question" + "because was not assigned ");
+				}
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
 			});
 		}
 	}

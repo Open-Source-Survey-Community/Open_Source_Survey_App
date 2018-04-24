@@ -600,13 +600,13 @@ export default {
 
 									}).catch(error => {
 										if (error){
-											throw new Error(error);
+											reject(error);
 										}
 									});
 
 							},(error)=>{
 								if (error){
-									throw new Error(error);
+									reject(error);
 								}
 								resolve(true);
 							});
@@ -621,6 +621,32 @@ export default {
 				}).catch(error => {
 					throw new Error(error);
 
+				});
+		},
+		asignarEstadoPregunta: (parent, args, {models}) => {
+			return models.Pregunta.findById(args.idPregunta)
+				.then(registroPregunta => {
+					if (registroPregunta.usuario_ID == args.idUsuario){
+						throw new Error("you can't re-assign a state if you" +
+							"are the owner the question");
+					}else if(registroPregunta.estados_asignados[0].usuario == args.idUsuario){
+						return models.Pregunta.findOneAndUpdate({_id:args.idPregunta,"estados_asignados.usuario": args.idUsuario},{
+							$set:{"estado": args.estado,"estados_asignados.$.estado_asignado":args.estado,
+								"estados_asignados.$.observacion":args.observacion}
+						},{new: true}).then(preguntaActualizada => {
+							return preguntaActualizada;
+						}).catch(errorActualizar => {
+							throw new Error(errorActualizar);
+						});
+					}else{
+						throw new Error("this users is not be able to assign this state to this question" +
+							"because was not assigned ");
+					}
+					
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
 				});
 		}
 	}

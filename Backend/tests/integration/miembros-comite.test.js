@@ -255,10 +255,101 @@ describe("Acciones del modereador(miembros del comite) hacia la correccion de un
 				}
 			}))
 			.then(response => {
-				console.log(response);
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(true);
 				expect(response.data.asignarPreguntasAMiembroComite).toBe(true);
+				done();
+			});
+	});
+
+	it("Deberia poder asignar un estado a una pregunta, siendo" +
+		"miembro del comite", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation asignarEstadoPregunta($idPregunta: String!, 
+														$idUsuario: String!,$estado: String!, $observacion:String){
+							asignarEstadoPregunta(idPregunta: $idPregunta,idUsuario: $idUsuario,
+												  estado: $estado, observacion: $observacion){
+												  
+									estado
+									estados_asignados{
+										estado_asignado
+									}					  
+							}
+								
+				}`,
+				variables: {
+					idPregunta: "5addfc4dff628f04be5dcc97",
+					idUsuario:"5ac24c758e4a6a23d4869ac7",
+					estado: "aceptado",
+					observacion: "ha sido aceptado"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.asignarEstadoPregunta.estado).toMatch(/aceptado/);
+				expect(response.data.asignarEstadoPregunta.estados_asignados[0].estado_asignado).toMatch(/aceptado/);
+				done();
+			});
+	});
+	it("Deberia no poder asignar un estado a una pregunta, siendo" +
+		"el creador de la pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation asignarEstadoPregunta($idPregunta: String!, 
+														$idUsuario: String!,$estado: String!, $observacion:String){
+							asignarEstadoPregunta(idPregunta: $idPregunta,idUsuario: $idUsuario,
+												  estado: $estado, observacion: $observacion){
+												  
+									estado
+									estados_asignados{
+										estado_asignado
+									}					  
+							}
+								
+				}`,
+				variables: {
+					idPregunta: "5addfc4dff628f04be5dcc97",
+					idUsuario:"5ac248c98a3f74223f16895e",
+					estado: "aceptado",
+					observacion: "ha sido aceptado"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/are the owner the question/);
+				done();
+			});
+	});
+	it("Deberia no poder asignar un estado a una pregunta,no siendo" +
+		"designado como asignar estado de una pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation asignarEstadoPregunta($idPregunta: String!, 
+														$idUsuario: String!,$estado: String!, $observacion:String){
+							asignarEstadoPregunta(idPregunta: $idPregunta,idUsuario: $idUsuario,
+												  estado: $estado, observacion: $observacion){
+												  
+									estado
+									estados_asignados{
+										estado_asignado
+									}					  
+							}
+								
+				}`,
+				variables: {
+					idPregunta: "5addfc4dff628f04be5dcc97",
+					idUsuario:"5ac248c98a3f74223f00895e",
+					estado: "aceptado",
+					observacion: "ha sido aceptado"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/because was not assigned/);
 				done();
 			});
 	});

@@ -68,7 +68,7 @@ const Pregunta = `
 				rollbackDescripcionPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
 				rollbackRespuestasPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
 				rollbackImagenPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
-				asignarEstadoPregunta(idPregunta: String, idUsuario: String, estado: String): Pregunta
+				asignarEstadoPregunta(idPregunta: String!, idUsuario: String!, estado: String!, observacion: String): Pregunta
 				asignarPreguntasAMiembroComite(idUsuario: String, arrayPreguntas: [ID!]):Boolean
 			}
 			
