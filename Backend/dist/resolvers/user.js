@@ -58,7 +58,7 @@ exports.default = {
 						nombre: args.nombre,
 						urlImage: args.urlImage,
 						roles: [{ rol: args.rol, Acciones: [args.acciones] }] });
-					userInstance.save().then(function (documento) {
+					return userInstance.save().then(function (documento) {
 						return documento;
 					}).catch(function (error) {
 						if (error) {

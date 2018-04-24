@@ -15,17 +15,17 @@ describe("Modelo usuario", function () {
 		self.test(JSON.stringify({
 			query: "mutation crearUsuario($correo: String!, $nombre: String,\n\t\t\t\t\t\t$urlImage: String, $rol: String, $acciones: String){\n\t\t\t\t\t\t\tcrearUsuario(correo: $correo,nombre: $nombre, urlImage: $urlImage,\n\t\t\t\t\t\t\t \t\t\t\trol: $rol, acciones: $acciones){\n\t\t\t\t\t\t\t \t\t\t\t\t_id\n\t\t\t\t\t\t\t \t\t\t\t\tcorreo\n\t\t\t\t\t\t\t \t\t\t\t\tnombre\t\n\t\t\t\t\t\t\t \t\t\t\t}\t\t\t\t\n\t\t\t\t\t\t}",
 			variables: {
-				correo: 'kevinandresortizmerchan@gmail.com',
-				nombre: 'kevin Ortiz Merchan',
+				correo: 'juanpedro@gmail.com',
+				nombre: 'juan pedro',
 				urlImage: 'no image',
-				rol: 'usuario',
+				rol: 'comite',
 				acciones: 'crear pregunta, crear encuesta, creacion contenido'
 			}
 		})).then(function (response) {
 			expect(response.status).toBe(200);
 			expect(response.success).toBe(true);
-			expect(response.data.crearUsuario.nombre).toMatch(/kevin Ortiz/);
-			expect(response.data.crearUsuario.correo).toMatch(/kevinandresortizmerchan@gmail.com/);
+			expect(response.data.crearUsuario.nombre).toMatch(/juan pedro/);
+			expect(response.data.crearUsuario.correo).toMatch(/juanpedro@gmail.com/);
 			done();
 		});
 	});

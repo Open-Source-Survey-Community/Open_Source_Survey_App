@@ -70,6 +70,7 @@ const Pregunta = `
 				rollbackImagenPregunta(idPregunta: String, idPreguntaAnterior: String, ownerQuestion: String): Pregunta
 				asignarEstadoPregunta(idPregunta: String!, idUsuario: String!, estado: String!, observacion: String): Pregunta
 				asignarPreguntasAMiembroComite(idUsuario: String, arrayPreguntas: [ID!]):Boolean
+				transferirListaPreguntasDesignadasAUsuario(idUsuarioDesignado: String, idUsuarioActivo: String):Boolean
 			}
 			
 			

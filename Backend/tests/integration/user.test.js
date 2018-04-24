@@ -22,18 +22,18 @@ describe("Modelo usuario", function (){
 							 				}				
 						}`,
 				variables:{
-					correo: 'kevinandresortizmerchan@gmail.com',
-					nombre: 'kevin Ortiz Merchan',
+					correo: 'juanpedro@gmail.com',
+					nombre: 'juan pedro',
 					urlImage: 'no image',
-					rol: 'usuario',
+					rol: 'comite',
 					acciones: 'crear pregunta, crear encuesta, creacion contenido'
 				}
 			}))
 			.then(response => {
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(true);
-				expect(response.data.crearUsuario.nombre).toMatch(/kevin Ortiz/);
-				expect(response.data.crearUsuario.correo).toMatch(/kevinandresortizmerchan@gmail.com/);
+				expect(response.data.crearUsuario.nombre).toMatch(/juan pedro/);
+				expect(response.data.crearUsuario.correo).toMatch(/juanpedro@gmail.com/);
 				done();
 			});
 	});

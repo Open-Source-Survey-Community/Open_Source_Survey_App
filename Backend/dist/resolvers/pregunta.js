@@ -585,6 +585,33 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
+		},
+		transferirListaPreguntasDesignadasAUsuario: function transferirListaPreguntasDesignadasAUsuario(parent, args, _ref19) {
+			var models = _ref19.models;
+
+			return models.User.findById(args.idUsuarioDesignado).then(function (usuario) {
+				if (usuario.roles[0].rol === "comite") {
+					return models.Pregunta.update({ "estados_asignados.usuario": args.idUsuarioActivo }, {
+						$set: { "estados_asignados.$.usuario": args.idUsuarioDesignado }
+					}, { multi: true, new: true }).then(function (actualizada) {
+						if (actualizada.n > 0) {
+							return true;
+						} else {
+							return false;
+						}
+					}).catch(function (error) {
+						if (error) {
+							throw new Error(error);
+						}
+					});
+				} else {
+					throw new Error("only commite member can assigned this questions");
+				}
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
 		}
 	}
 }; /* eslint-disable no-unused-vars */

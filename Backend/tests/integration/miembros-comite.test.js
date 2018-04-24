@@ -353,5 +353,25 @@ describe("Acciones del modereador(miembros del comite) hacia la correccion de un
 				done();
 			});
 	});
+	it("Deberia poder asignar la lista de preguntas" +
+		"a otro usuario que tambien es miembro de comite", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation transferirListaPreguntasDesignadasAUsuario($idUsuarioDesignado: String!, $idUsuarioActivo:String){
+							transferirListaPreguntasDesignadasAUsuario(idUsuarioDesignado:$idUsuarioDesignado,idUsuarioActivo:$idUsuarioActivo)
+								
+				}`,
+				variables: {
+					idUsuarioDesignado: "5ade907216edf832bf53692b",
+					idUsuarioActivo:"5ac24c758e4a6a23d4869ac7"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.transferirListaPreguntasDesignadasAUsuario).toBe(true);
+				done();
+			});
+	});
 
 });

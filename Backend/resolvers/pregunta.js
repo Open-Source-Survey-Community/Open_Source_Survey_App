@@ -648,6 +648,34 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+		transferirListaPreguntasDesignadasAUsuario: (parent, args, {models})=>{
+			return models.User.findById(args.idUsuarioDesignado)
+				.then(usuario => {
+					if(usuario.roles[0].rol === "comite"){
+						return models.Pregunta.update({"estados_asignados.usuario": args.idUsuarioActivo},{
+							$set:{"estados_asignados.$.usuario":args.idUsuarioDesignado}
+						},{multi:true,new:true}).then(actualizada => {
+							if(actualizada.n >0){
+								return true;
+							}else{
+								return false;
+							}
+						}).catch(error =>{
+							if(error){
+								throw new Error(error);
+							}
+						});
+						
+					}else{
+						throw new Error("only commite member can assigned this questions");
+					}
+
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
 		}
 	}
 };
