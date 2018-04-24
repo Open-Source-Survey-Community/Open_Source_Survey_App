@@ -35,4 +35,32 @@ describe("Escenario del modelo de comentarios", function (){
 				done();
 			});
 	});
+	it("El usuario deberia poder crear un comentario asociado a una correccion de pregunta", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation crearComentarioAnexadaADiscusionPregunta($comentario: ComentarioInput, $idDiscusionPregunta: String!){
+							crearComentarioAnexadaADiscusionPregunta(comentario: $comentario, idDiscusionPregunta: $idDiscusionPregunta){
+							 					creador_comentario{
+							 						correo
+							 						nombre
+							 					}
+							 					contenido	
+							 				}				
+						}`,
+				variables:{
+					comentario: {
+						contenido: "es mi primer comentario de esta correccion de pregunta",
+						creador_comentario:"5ade907216edf832bf53692b",
+						fecha_creacion: new Date
+					},
+					idDiscusionPregunta: "5ad6188ebd916635f7ac9f86"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.crearComentarioAnexadaADiscusionPregunta.contenido).toMatch(/es mi primer comentario de esta correccion de pregunta/);
+				done();
+			});
+	});
 });

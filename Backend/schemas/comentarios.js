@@ -45,6 +45,7 @@ const Comentario = `
 		
 		type Mutation {
 			crearComentarioAnexadaAPregunta(comentario: ComentarioInput, idPregunta: String!): Comentario
+			crearComentarioAnexadaADiscusionPregunta(comentario: ComentarioInput, idDiscusionPregunta: String!): Comentario
 		}
 
 `;
