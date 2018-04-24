@@ -63,4 +63,32 @@ describe("Escenario del modelo de comentarios", function (){
 				done();
 			});
 	});
+	it("El usuario deberia poder crear un comentario asociado a otro comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation crearSubComentarioAnexadaAComentario($comentario: ComentarioInput, $idComentario: String!){
+							crearSubComentarioAnexadaAComentario(comentario: $comentario, idComentario: $idComentario){
+							 					creador_comentario{
+							 						correo
+							 						nombre
+							 					}
+							 					contenido	
+							 				}				
+						}`,
+				variables:{
+					comentario: {
+						contenido: "es mi primer comentario de un comentario",
+						creador_comentario:"5ade907216edf832bf53692b",
+						fecha_creacion: new Date
+					},
+					idComentario: "5adf543587d8de49e1d9aaee"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.crearSubComentarioAnexadaAComentario.contenido).toMatch(/es mi primer comentario de un comentario/);
+				done();
+			});
+	});
 });
