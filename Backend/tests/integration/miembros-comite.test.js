@@ -30,6 +30,25 @@ describe("Acciones del modereador(miembros del comite) hacia la correccion de un
 				done();
 			});
 	});
+	it("Deberia poder ver la lista de preguntas que he sido designado", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query cargarListaPreguntasAsignadasRevisor($idUsuario: String){
+							cargarListaPreguntasAsignadasRevisor(idUsuario: $idUsuario){
+							 					descripcion	
+							 				}				
+						}`,
+				variables: {
+					idUsuario:"5ade907216edf832bf53692b"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.cargarListaPreguntasAsignadasRevisor.length).toBe(3);
+				done();
+			});
+	});
 	it("No deberia poder ver el listado de las discusiones que se han creado o editado si no soy moderador", function (done) {
 		self
 			.test(JSON.stringify({

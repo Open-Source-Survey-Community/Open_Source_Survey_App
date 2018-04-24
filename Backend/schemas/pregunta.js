@@ -47,7 +47,7 @@ const Pregunta = `
 				listadoUsuariosDistintosCreadoPreguntas :[Usuario]
 				listadoAreasConocimientosUsadasPreguntas: [AreaConocimiento]
 				cargarListadoPreguntasByAreasConocimiento(after: String,limit: Int, word: String,idAreaConocimiento: String): PreguntaConnection
-				
+				cargarListaPreguntasAsignadasRevisor(idUsuario: String):[Pregunta]
 			}
 			input PreguntaInput{
 				descripcion: String!

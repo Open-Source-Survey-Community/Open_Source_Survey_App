@@ -7,6 +7,7 @@ export default {
 			return models.Pregunta.findOne({_id: args.idPregunta,
 				registroActual: true })
 				.populate("usuario_ID")
+				.populate("estados_asignados.usuario")
 				.populate("areaconocimiento")
 				.populate("discusiones")
 				.then(pregunta => {
@@ -31,6 +32,7 @@ export default {
 						reject(err);
 					}
 				}).populate("usuario_ID")
+					.populate("estados_asignados.usuario")
 					.populate("areaconocimiento")
 					.populate("discusiones")
 					.limit(args.limit).cursor();
@@ -91,6 +93,7 @@ export default {
 			if (args.idUsuario) {
 				return models.Pregunta.find({usuario_ID: args.idUsuario, registroActual: true})
 					.populate("usuario_ID")
+					.populate("estados_asignados.usuario")
 					.populate("areaconocimiento")
 					.populate("discusiones")
 					.sort({"fecha_creacion":-1})
@@ -118,6 +121,7 @@ export default {
 				}
 				return models.Pregunta.find({usuario_ID: args.idUsuario, registroActual: true, estado: estado})
 					.populate("usuario_ID")
+					.populate("estados_asignados.usuario")
 					.populate("areaconocimiento")
 					.populate("discusiones")
 					.sort({"fecha_creacion":-1})
@@ -146,6 +150,7 @@ export default {
 						reject(err);
 					}
 				}).populate("usuario_ID")
+					.populate("estados_asignados.usuario")
 					.populate("areaconocimiento")
 					.populate("discusiones")
 					.limit(args.limit).cursor();
@@ -314,6 +319,23 @@ export default {
 				};
 			});
 			return listPaginatePregunta;
+		},
+		cargarListaPreguntasAsignadasRevisor: (parent, args, {models})=>{
+			return models.Pregunta.find({"estados_asignados.usuario":args.idUsuario, "registroActual": true})
+				.populate("usuario_ID")
+				.populate("areaconocimiento")
+				.populate("estados_asignados.usuario")
+				.populate("discusiones")
+				.sort({"fecha_creacion":-1})
+				.then(listaPreguntas => {
+					return listaPreguntas;
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
+
+
 		}
 	},
 	Mutation: {
