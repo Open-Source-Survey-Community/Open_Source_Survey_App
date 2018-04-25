@@ -78,6 +78,27 @@ export default {
 				}).catch(error => {
 					throw new Error(error);
 				});
+		},
+		editarComentario: (parent, args, {models}) => {
+			return models.Comentario.findById(args.idComentario)
+				.then(registroComentario => {
+					if (registroComentario.creador_comentario == args.idUsuario){
+						return models.Comentario.findByIdAndUpdate(args.idComentario,{$set:{contenido: args.contenido}},{new: true})
+							.populate("creador_comentario")
+							.then(comentarioActualizado=>{
+								return comentarioActualizado;
+							}).catch(error => {
+								throw new Error(error);
+							});
+					}else{
+						throw new Error("this users is not the owner this question");
+					}
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
+
 		}
 	}
 };

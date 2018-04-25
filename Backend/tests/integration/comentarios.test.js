@@ -91,4 +91,54 @@ describe("Escenario del modelo de comentarios", function (){
 				done();
 			});
 	});
+	it("Deberia poder editar el contenido de un comentario, si soy propietario de ese comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarComentario($contenido: String, $idComentario: String, $idUsuario: String!){
+							editarComentario(contenido: $contenido, idComentario: $idComentario, idUsuario: $idUsuario){
+							 					creador_comentario{
+							 						correo
+							 						nombre
+							 					}
+							 					contenido	
+							 				}				
+						}`,
+				variables:{
+					contenido: "comentario actualizado correctamente",
+					idComentario: "5adf543587d8de49e1d9aaee",
+					idUsuario:"5ade907216edf832bf53692b"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.editarComentario.contenido).toMatch(/comentario actualizado correctamente/);
+				done();
+			});
+	});
+	it("No Deberia poder editar el contenido de un comentario, si no soy propietario de ese comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation editarComentario($contenido: String, $idComentario: String, $idUsuario: String!){
+							editarComentario(contenido: $contenido, idComentario: $idComentario, idUsuario: $idUsuario){
+							 					creador_comentario{
+							 						correo
+							 						nombre
+							 					}
+							 					contenido	
+							 				}				
+						}`,
+				variables:{
+					contenido: "comentario actualizado correctamente",
+					idComentario: "5adf543587d8de49e1d9aaee",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(false);
+				expect(response.errors[0].message).toMatch(/this users is not the owner this question/);
+				done();
+			});
+	});
 });

@@ -47,6 +47,7 @@ const Comentario = `
 			crearComentarioAnexadaAPregunta(comentario: ComentarioInput, idPregunta: String!): Comentario
 			crearComentarioAnexadaADiscusionPregunta(comentario: ComentarioInput, idDiscusionPregunta: String!): Comentario
 			crearSubComentarioAnexadaAComentario(comentario: ComentarioInput, idComentario: String): Comentario
+			editarComentario(contenido: String, idComentario: String, idUsuario: String!):Comentario
 		}
 
 `;
