@@ -7,25 +7,24 @@ const Comentario = `
 			contenido: String
 			fecha_creacion: String
 			fecha_actualizacion: String
-			likes: [Like]
-			dislikes: [Dislike]
-			favoritos: [Favoritos]
+			votacion: [Voto]
 			listaSubComentarios:[Comentario]
 		}
 		
-		type Like{
+		type Voto{
 			usuario_creador: Usuario
-			voto: Int
+			like: Int
+			dislike: Int
+			favoritos: Int
 		}
 		
-		type Dislike{
-			usuario_creador: Usuario
-			voto: Int
+		type Votacion{
+			like: Int
+			dislike: Int
 		}
-		type Favoritos{
-			usuario_creador: Usuario
-			voto: Int
-		}
+		
+		
+		
 		type ComentarioConnection {
 			totalCount: Int
 			edges: [ComentarioEdge]
@@ -48,6 +47,7 @@ const Comentario = `
 			crearComentarioAnexadaADiscusionPregunta(comentario: ComentarioInput, idDiscusionPregunta: String!): Comentario
 			crearSubComentarioAnexadaAComentario(comentario: ComentarioInput, idComentario: String): Comentario
 			editarComentario(contenido: String, idComentario: String, idUsuario: String!):Comentario
+			colocarLikesComentario(idUsuario: String, idComentario: String):Votacion
 		}
 
 `;

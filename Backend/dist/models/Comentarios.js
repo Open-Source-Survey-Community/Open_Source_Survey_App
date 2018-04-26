@@ -13,21 +13,15 @@ var comentarioSchame = new Schame({
 	contenido: String,
 	fecha_creacion: { type: Date, index: true },
 	fecha_actualizacion: { type: Date, index: true },
-	likes: [{
+	votacion: [{
 		usuario_creador: { type: Schame.Types.ObjectId, ref: "usuario" },
-		voto: {
+		like: {
 			type: Number
-		}
-	}],
-	dislikes: [{
-		usuario_creador: { type: Schame.Types.ObjectId, ref: "usuario" },
-		voto: {
+		},
+		dislike: {
 			type: Number
-		}
-	}],
-	favoritos: [{
-		usuario_creador: { type: Schame.Types.ObjectId, ref: "usuario" },
-		voto: {
+		},
+		favoritos: {
 			type: Number
 		}
 	}],

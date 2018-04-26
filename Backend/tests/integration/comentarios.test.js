@@ -141,4 +141,138 @@ describe("Escenario del modelo de comentarios", function (){
 				done();
 			});
 	});
+	it("Deberia dar mi voto positivo, a un comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarLikesComentario($idUsuario: String, $idComentario: String){
+							colocarLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarLikesComentario.like).toBe(1);
+				expect(response.data.colocarLikesComentario.dislike).toBe(0);
+				done();
+			});
+	});
+	it("Deberia Obtener un voto nulo a mi comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarLikesComentario($idUsuario: String, $idComentario: String){
+							colocarLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarLikesComentario.like).toBe(-1);
+				expect(response.data.colocarLikesComentario.dislike).toBe(0);
+				done();
+			});
+	});
+	it("Deberia Obtener un voto positivo a un comentario si anteriormente mi voto " +
+		"fue negativo", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarLikesComentario($idUsuario: String, $idComentario: String){
+							colocarLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarLikesComentario.like).toBe(1);
+				expect(response.data.colocarLikesComentario.dislike).toBe(-1);
+				done();
+			});
+	});
+	it("Deberia Obtener un voto positivo a un comentario si no " +
+		"poseo ningun voto", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarLikesComentario($idUsuario: String, $idComentario: String){
+							colocarLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarLikesComentario.like).toBe(1);
+				expect(response.data.colocarLikesComentario.dislike).toBe(0);
+				done();
+			});
+	});
+	it("Deberia dar mi voto positivo, a un comentario de un nuevo usuario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarLikesComentario($idUsuario: String, $idComentario: String){
+							colocarLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ac24c758e4a6a23d4869ac7"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarLikesComentario.like).toBe(1);
+				expect(response.data.colocarLikesComentario.dislike).toBe(0);
+				done();
+			});
+	});
+	it("Deberia Obtener un voto nulo a mi comentario de un nuevo usuario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarLikesComentario($idUsuario: String, $idComentario: String){
+							colocarLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ac24c758e4a6a23d4869ac7"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarLikesComentario.like).toBe(-1);
+				expect(response.data.colocarLikesComentario.dislike).toBe(0);
+				done();
+			});
+	});
 });
