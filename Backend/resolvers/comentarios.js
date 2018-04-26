@@ -120,7 +120,6 @@ export default {
 							return models.Comentario.findOneAndUpdate({"_id":args.idComentario,"votacion.usuario_creador": args.idUsuario},{
 								$set:{"votacion.$.usuario_creador": args.idUsuario, "votacion.$.like":1,"votacion.$.dislike":0}
 							},{new: true})
-								.populate("votacion.usuario_creador")
 								.then(() => {
 									return {like:1, dislike:-1};
 								}).catch(error => {
@@ -132,7 +131,6 @@ export default {
 							return models.Comentario.findOneAndUpdate({"_id":args.idComentario,"votacion.usuario_creador": args.idUsuario},{
 								$set:{"votacion.$.usuario_creador": args.idUsuario, "votacion.$.like":1}
 							},{new: true})
-								.populate("votacion.usuario_creador")
 								.then(() => {
 									return {like:1, dislike:0};
 								}).catch(error => {
@@ -146,7 +144,6 @@ export default {
 						return models.Comentario.findByIdAndUpdate(args.idComentario,
 							{$push:{"votacion":{"usuario_creador": args.idUsuario, "like":1, "dislike":0, "favoritos":0}}
 							},{new: true})
-							.populate("votacion.usuario_creador")
 							.then(() => {
 								return {like:1, dislike:0};
 							}).catch(error => {
@@ -181,7 +178,6 @@ export default {
 							return models.Comentario.findOneAndUpdate({"_id":args.idComentario,"votacion.usuario_creador": args.idUsuario},{
 								$set:{"votacion.$.usuario_creador": args.idUsuario, "votacion.$.like":0,"votacion.$.dislike":1}
 							},{new: true})
-								.populate("votacion.usuario_creador")
 								.then(() => {
 									return {like:-1, dislike:1};
 								}).catch(error => {
@@ -193,7 +189,6 @@ export default {
 							return models.Comentario.findOneAndUpdate({"_id":args.idComentario,"votacion.usuario_creador": args.idUsuario},{
 								$set:{"votacion.$.usuario_creador": args.idUsuario, "votacion.$.dislike":1}
 							},{new: true})
-								.populate("votacion.usuario_creador")
 								.then(() => {
 									return {like:0, dislike:1};
 								}).catch(error => {
@@ -207,9 +202,56 @@ export default {
 						return models.Comentario.findByIdAndUpdate(args.idComentario,
 							{$push:{"votacion":{"usuario_creador": args.idUsuario, "like":0, "dislike":1, "favoritos":0}}
 							},{new: true})
-							.populate("votacion.usuario_creador")
 							.then(() => {
 								return {like:0, dislike:1};
+							}).catch(error => {
+								if(error){
+									throw new Error(error);
+								}
+							});
+					}
+				}).catch(error => {
+					if (error){
+						throw new Error(error);
+					}
+				});
+		},
+		colocarFavoritosComentario: (parent, args, {models})=>{
+			return models.Comentario.findOne({"_id": args.idComentario, "votacion.usuario_creador": args.idUsuario},{"votacion.$":1})
+				.then(comentario => {
+					if(comentario){
+						if(comentario.votacion[0].favoritos === 1){
+							return models.Comentario.findOneAndUpdate({"_id":args.idComentario,"votacion.usuario_creador": args.idUsuario},{
+								$set:{"votacion.$.usuario_creador": args.idUsuario, "votacion.$.favoritos":0}
+							},{new: true})
+								.then(() => {
+									return 0;
+								}).catch(error => {
+									if(error){
+										throw new Error(error);
+									}
+								});
+
+						}else if(comentario.votacion[0].favoritos === 0){
+							return models.Comentario.findOneAndUpdate({"_id":args.idComentario,"votacion.usuario_creador": args.idUsuario},{
+								$set:{"votacion.$.usuario_creador": args.idUsuario, "votacion.$.favoritos":1}
+							},{new: true})
+								.then(() => {
+									return 1;
+								}).catch(error => {
+									if(error){
+										throw new Error(error);
+									}
+								});
+						}
+
+					}else{
+						return models.Comentario.findByIdAndUpdate(args.idComentario,
+							{$push:{"votacion":{"usuario_creador": args.idUsuario, "like":0, "dislike":0, "favoritos":1}}
+							},{new: true})
+							.populate("votacion.usuario_creador")
+							.then(() => {
+								return 1;
 							}).catch(error => {
 								if(error){
 									throw new Error(error);

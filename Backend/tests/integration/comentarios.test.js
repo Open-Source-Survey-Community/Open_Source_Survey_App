@@ -185,6 +185,24 @@ describe("Escenario del modelo de comentarios", function (){
 				done();
 			});
 	});
+	it("Deberia dar favorito a un comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarFavoritosComentario($idUsuario: String, $idComentario: String){
+							colocarFavoritosComentario(idUsuario: $idUsuario, idComentario: $idComentario)				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarFavoritosComentario).toBe(1);
+				done();
+			});
+	});
 	it("Deberia quitar mi voto negativo, a un comentario", function (done) {
 		self
 			.test(JSON.stringify({

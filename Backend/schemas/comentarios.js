@@ -49,6 +49,7 @@ const Comentario = `
 			editarComentario(contenido: String, idComentario: String, idUsuario: String!):Comentario
 			colocarLikesComentario(idUsuario: String, idComentario: String):Votacion
 			colocarDisLikesComentario(idUsuario: String, idComentario: String):Votacion
+			colocarFavoritosComentario(idUsuario: String, idComentario: String):Int
 
 		}
 
