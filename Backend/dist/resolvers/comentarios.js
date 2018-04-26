@@ -5,9 +5,22 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = {
 
-	Mutation: {
-		crearComentarioAnexadaAPregunta: function crearComentarioAnexadaAPregunta(parent, args, _ref) {
+	Query: {
+		verComentario: function verComentario(parent, args, _ref) {
 			var models = _ref.models;
+
+			return models.Comentario.findById(args.idComentario).populate("creador_comentario").populate("listaSubComentarios").populate("votacion.usuario_creador").then(function (comentario) {
+				return comentario;
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
+		}
+	},
+	Mutation: {
+		crearComentarioAnexadaAPregunta: function crearComentarioAnexadaAPregunta(parent, args, _ref2) {
+			var models = _ref2.models;
 
 			return models.Comentario.count().then(function (existenComentariosCreados) {
 				if (existenComentariosCreados) {
@@ -31,8 +44,8 @@ exports.default = {
 				throw new Error(error);
 			});
 		},
-		crearComentarioAnexadaADiscusionPregunta: function crearComentarioAnexadaADiscusionPregunta(parent, args, _ref2) {
-			var models = _ref2.models;
+		crearComentarioAnexadaADiscusionPregunta: function crearComentarioAnexadaADiscusionPregunta(parent, args, _ref3) {
+			var models = _ref3.models;
 
 			return models.Comentario.count().then(function (existenComentariosCreados) {
 				if (existenComentariosCreados) {
@@ -56,8 +69,8 @@ exports.default = {
 				throw new Error(error);
 			});
 		},
-		crearSubComentarioAnexadaAComentario: function crearSubComentarioAnexadaAComentario(parent, args, _ref3) {
-			var models = _ref3.models;
+		crearSubComentarioAnexadaAComentario: function crearSubComentarioAnexadaAComentario(parent, args, _ref4) {
+			var models = _ref4.models;
 
 			return models.Comentario.count().then(function (existenComentariosCreados) {
 				if (existenComentariosCreados) {
@@ -81,12 +94,12 @@ exports.default = {
 				throw new Error(error);
 			});
 		},
-		editarComentario: function editarComentario(parent, args, _ref4) {
-			var models = _ref4.models;
+		editarComentario: function editarComentario(parent, args, _ref5) {
+			var models = _ref5.models;
 
 			return models.Comentario.findById(args.idComentario).then(function (registroComentario) {
 				if (registroComentario.creador_comentario == args.idUsuario) {
-					return models.Comentario.findByIdAndUpdate(args.idComentario, { $set: { contenido: args.contenido } }, { new: true }).populate("creador_comentario").then(function (comentarioActualizado) {
+					return models.Comentario.findByIdAndUpdate(args.idComentario, { $set: { contenido: args.contenido, fecha_actualizacion: new Date() } }, { new: true }).populate("creador_comentario").then(function (comentarioActualizado) {
 						return comentarioActualizado;
 					}).catch(function (error) {
 						throw new Error(error);
@@ -100,8 +113,8 @@ exports.default = {
 				}
 			});
 		},
-		colocarLikesComentario: function colocarLikesComentario(parent, args, _ref5) {
-			var models = _ref5.models;
+		colocarLikesComentario: function colocarLikesComentario(parent, args, _ref6) {
+			var models = _ref6.models;
 
 			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
 				if (comentario) {
@@ -152,8 +165,8 @@ exports.default = {
 				}
 			});
 		},
-		colocarDisLikesComentario: function colocarDisLikesComentario(parent, args, _ref6) {
-			var models = _ref6.models;
+		colocarDisLikesComentario: function colocarDisLikesComentario(parent, args, _ref7) {
+			var models = _ref7.models;
 
 			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
 				if (comentario) {
@@ -204,8 +217,8 @@ exports.default = {
 				}
 			});
 		},
-		colocarFavoritosComentario: function colocarFavoritosComentario(parent, args, _ref7) {
-			var models = _ref7.models;
+		colocarFavoritosComentario: function colocarFavoritosComentario(parent, args, _ref8) {
+			var models = _ref8.models;
 
 			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
 				if (comentario) {

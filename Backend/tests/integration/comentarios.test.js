@@ -81,7 +81,7 @@ describe("Escenario del modelo de comentarios", function (){
 						creador_comentario:"5ade907216edf832bf53692b",
 						fecha_creacion: new Date
 					},
-					idComentario: "5adf543587d8de49e1d9aaee"
+					idComentario: "5adff4bc4c721f08e52bae1d"
 				}
 			}))
 			.then(response => {
@@ -334,6 +334,49 @@ describe("Escenario del modelo de comentarios", function (){
 				expect(response.success).toBe(true);
 				expect(response.data.colocarLikesComentario.like).toBe(-1);
 				expect(response.data.colocarLikesComentario.dislike).toBe(0);
+				done();
+			});
+	});
+});
+
+describe("Acciones de consulta para el modelo comentario", function(){
+	const self = this;
+	self.test = tester({
+		url: "http://127.0.0.1:3660/graphtest",
+		contentType: "application/json"
+	});
+	it("Deberia ver informacion de un comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `query verComentario($idComentario: String){
+							  verComentario(idComentario: $idComentario){
+							  				creador_comentario{
+							  					correo
+							  					nombre
+							  				}
+							  				contenido
+							  				fecha_creacion
+							  				fecha_actualizacion
+							  				votacion{
+							  					usuario_creador{
+							  						nombre
+							  						correo
+							  					}
+							  					like
+							  					dislike
+							  					favoritos
+							  				}
+							 					
+							 				}				
+						}`,
+				variables:{
+					idComentario:"5adff4bc4c721f08e52bae1d"
+				}
+			}))
+			.then(response => {
+				console.log(response);
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
 				done();
 			});
 	});

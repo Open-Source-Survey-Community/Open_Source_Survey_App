@@ -40,7 +40,9 @@ const Comentario = `
 			creador_comentario:ID!
 			fecha_creacion: String!
 		}
-		
+		type Query{
+			verComentario(idComentario: String): Comentario
+		}
 		
 		type Mutation {
 			crearComentarioAnexadaAPregunta(comentario: ComentarioInput, idPregunta: String!): Comentario

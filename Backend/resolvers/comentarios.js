@@ -1,5 +1,20 @@
 export default {
 
+	Query:{
+		verComentario: (parent, args, {models})=>{
+			return models.Comentario.findById(args.idComentario)
+				.populate("creador_comentario")
+				.populate("listaSubComentarios")
+				.populate("votacion.usuario_creador")
+				.then(comentario => {
+					return comentario;
+				}).catch(error =>{
+					if (error){
+						throw new Error(error);
+					}
+				});
+		}
+	},
 	Mutation:{
 		crearComentarioAnexadaAPregunta: (parent, args, {models})=>{
 			return models.Comentario.count()
@@ -83,7 +98,9 @@ export default {
 			return models.Comentario.findById(args.idComentario)
 				.then(registroComentario => {
 					if (registroComentario.creador_comentario == args.idUsuario){
-						return models.Comentario.findByIdAndUpdate(args.idComentario,{$set:{contenido: args.contenido}},{new: true})
+						return models.Comentario.findByIdAndUpdate(args.idComentario,
+							{$set:{contenido: args.contenido,fecha_actualizacion: new Date}},
+							{new: true})
 							.populate("creador_comentario")
 							.then(comentarioActualizado=>{
 								return comentarioActualizado;
