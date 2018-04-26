@@ -163,6 +163,50 @@ describe("Escenario del modelo de comentarios", function (){
 				done();
 			});
 	});
+	it("Deberia dar mi voto negativo, a un comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarDisLikesComentario($idUsuario: String, $idComentario: String){
+							colocarDisLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarDisLikesComentario.like).toBe(0);
+				expect(response.data.colocarDisLikesComentario.dislike).toBe(1);
+				done();
+			});
+	});
+	it("Deberia quitar mi voto negativo, a un comentario", function (done) {
+		self
+			.test(JSON.stringify({
+				query: `mutation colocarDisLikesComentario($idUsuario: String, $idComentario: String){
+							colocarDisLikesComentario(idUsuario: $idUsuario, idComentario: $idComentario){
+							 					like
+							 					dislike	
+							 				}				
+						}`,
+				variables:{
+					idComentario: "5adff4bc4c721f08e52bae1d",
+					idUsuario:"5ade907216edf832bf536900"
+				}
+			}))
+			.then(response => {
+				expect(response.status).toBe(200);
+				expect(response.success).toBe(true);
+				expect(response.data.colocarDisLikesComentario.like).toBe(0);
+				expect(response.data.colocarDisLikesComentario.dislike).toBe(-1);
+				done();
+			});
+	});
 	it("Deberia Obtener un voto nulo a mi comentario", function (done) {
 		self
 			.test(JSON.stringify({

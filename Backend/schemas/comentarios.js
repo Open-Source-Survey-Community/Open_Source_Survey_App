@@ -48,6 +48,8 @@ const Comentario = `
 			crearSubComentarioAnexadaAComentario(comentario: ComentarioInput, idComentario: String): Comentario
 			editarComentario(contenido: String, idComentario: String, idUsuario: String!):Comentario
 			colocarLikesComentario(idUsuario: String, idComentario: String):Votacion
+			colocarDisLikesComentario(idUsuario: String, idComentario: String):Votacion
+
 		}
 
 `;

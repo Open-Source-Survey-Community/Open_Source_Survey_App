@@ -151,6 +151,58 @@ exports.default = {
 					throw new Error(error);
 				}
 			});
+		},
+		colocarDisLikesComentario: function colocarDisLikesComentario(parent, args, _ref6) {
+			var models = _ref6.models;
+
+			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
+				if (comentario) {
+					if (comentario.votacion[0].like === 0 && comentario.votacion[0].dislike === 1) {
+						return models.Comentario.findOneAndUpdate({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, {
+							$set: { "votacion.$.usuario_creador": args.idUsuario, "votacion.$.dislike": 0 }
+						}, { new: true }).then(function () {
+							return { like: 0, dislike: -1 };
+						}).catch(function (error) {
+							if (error) {
+								throw new Error(error);
+							}
+						});
+					} else if (comentario.votacion[0].like === 1 && comentario.votacion[0].dislike === 0) {
+						return models.Comentario.findOneAndUpdate({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, {
+							$set: { "votacion.$.usuario_creador": args.idUsuario, "votacion.$.like": 0, "votacion.$.dislike": 1 }
+						}, { new: true }).populate("votacion.usuario_creador").then(function () {
+							return { like: -1, dislike: 1 };
+						}).catch(function (error) {
+							if (error) {
+								throw new Error(error);
+							}
+						});
+					} else if (comentario.votacion[0].like === 0 && comentario.votacion[0].dislike === 0) {
+						return models.Comentario.findOneAndUpdate({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, {
+							$set: { "votacion.$.usuario_creador": args.idUsuario, "votacion.$.dislike": 1 }
+						}, { new: true }).populate("votacion.usuario_creador").then(function () {
+							return { like: 0, dislike: 1 };
+						}).catch(function (error) {
+							if (error) {
+								throw new Error(error);
+							}
+						});
+					}
+				} else {
+					return models.Comentario.findByIdAndUpdate(args.idComentario, { $push: { "votacion": { "usuario_creador": args.idUsuario, "like": 0, "dislike": 1, "favoritos": 0 } }
+					}, { new: true }).populate("votacion.usuario_creador").then(function () {
+						return { like: 0, dislike: 1 };
+					}).catch(function (error) {
+						if (error) {
+							throw new Error(error);
+						}
+					});
+				}
+			}).catch(function (error) {
+				if (error) {
+					throw new Error(error);
+				}
+			});
 		}
 	}
 };
