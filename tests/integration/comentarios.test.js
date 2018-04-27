@@ -354,7 +354,11 @@ describe("Acciones de consulta para el modelo comentario", function(){
 							  					correo
 							  					nombre
 							  				}
+							  				identificador
 							  				contenido
+							  				listaSubComentarios{
+							  					identificador
+							  				}
 							  				fecha_creacion
 							  				fecha_actualizacion
 							  				votacion{
@@ -374,6 +378,7 @@ describe("Acciones de consulta para el modelo comentario", function(){
 				}
 			}))
 			.then(response => {
+				console.log(response);
 				expect(response.status).toBe(200);
 				expect(response.success).toBe(true);
 				done();
@@ -384,28 +389,11 @@ describe("Acciones de consulta para el modelo comentario", function(){
             .test(JSON.stringify({
                 query: `query verListaSubComentarios($idComentario: String){
 							  verListaSubComentarios(idComentario: $idComentario){
-							  				listaSubComentarios{
-							  					
-							  				creador_comentario{
-							  					correo
-							  					nombre
-							  				}
+							  			listaSubComentarios{
+							  				identificador
 							  				contenido
-							  				fecha_creacion
-							  				fecha_actualizacion
-							  				votacion{
-							  					usuario_creador{
-							  						nombre
-							  						correo
-							  					}
-							  					like
-							  					dislike
-							  					favoritos
-							  				}
-							  		
-							  		
-							  		
-							  				}		
+							  			}
+							  				
 							 			}				
 						}`,
                 variables:{
@@ -413,7 +401,6 @@ describe("Acciones de consulta para el modelo comentario", function(){
                 }
             }))
             .then(response => {
-            	console.log(response);
                 expect(response.status).toBe(200);
                 expect(response.success).toBe(true);
                 done();

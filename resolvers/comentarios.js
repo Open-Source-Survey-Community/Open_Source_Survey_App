@@ -15,14 +15,14 @@ export default {
 				});
 		},
         verListaSubComentarios: (parent, args, {models})=>{
-			return models.Comentario.findById(args.idComentario, "listaSubComentarios")
-				.populate({
+			return models.Comentario.findById(args.idComentario,"listaSubComentarios")
+                .populate({
 					path:"listaSubComentarios",
 					populate:{
-						path:"creador_comentario",
+						path: "creador_comentario",
 						model:"usuario"
 					}
-				})
+                })
 				.populate({
 					path:"listaSubComentarios",
 					populate:{
@@ -30,8 +30,8 @@ export default {
 						model:"usuario"
 					}
 				})
-				.then(listadocumentos =>{
-					return listadocumentos.listaSubComentarios;
+				.then(listaSubdocumentos =>{
+					return listaSubdocumentos;
 				}).catch(error =>{
 					throw new Error(error);
 				});
