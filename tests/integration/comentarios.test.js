@@ -379,4 +379,44 @@ describe("Acciones de consulta para el modelo comentario", function(){
 				done();
 			});
 	});
+    it("Deberia ver informacion de la lista de subcomentarios anexados a un comentario", function (done) {
+        self
+            .test(JSON.stringify({
+                query: `query verListaSubComentarios($idComentario: String){
+							  verListaSubComentarios(idComentario: $idComentario){
+							  				listaSubComentarios{
+							  					
+							  				creador_comentario{
+							  					correo
+							  					nombre
+							  				}
+							  				contenido
+							  				fecha_creacion
+							  				fecha_actualizacion
+							  				votacion{
+							  					usuario_creador{
+							  						nombre
+							  						correo
+							  					}
+							  					like
+							  					dislike
+							  					favoritos
+							  				}
+							  		
+							  		
+							  		
+							  				}		
+							 			}				
+						}`,
+                variables:{
+                    idComentario:"5adff4bc4c721f08e52bae1d"
+                }
+            }))
+            .then(response => {
+            	console.log(response);
+                expect(response.status).toBe(200);
+                expect(response.success).toBe(true);
+                done();
+            });
+    });
 });

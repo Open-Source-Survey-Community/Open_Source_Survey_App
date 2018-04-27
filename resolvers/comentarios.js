@@ -13,6 +13,28 @@ export default {
 						throw new Error(error);
 					}
 				});
+		},
+        verListaSubComentarios: (parent, args, {models})=>{
+			return models.Comentario.findById(args.idComentario, "listaSubComentarios")
+				.populate({
+					path:"listaSubComentarios",
+					populate:{
+						path:"creador_comentario",
+						model:"usuario"
+					}
+				})
+				.populate({
+					path:"listaSubComentarios",
+					populate:{
+						path:"votacion.usuario_creador",
+						model:"usuario"
+					}
+				})
+				.then(listadocumentos =>{
+					return listadocumentos.listaSubComentarios;
+				}).catch(error =>{
+					throw new Error(error);
+				});
 		}
 	},
 	Mutation:{

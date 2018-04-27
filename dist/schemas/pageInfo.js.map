@@ -1,1 +1,0 @@
-{"version":3,"sources":["../../schemas/pageInfo.js"],"names":["PageInfo"],"mappings":";;;;;AAAA,IAAMA,0FAAN;;kBAOeA,Q","file":"pageInfo.js","sourcesContent":["const PageInfo = `\n\ttype PageInfo {\n\t\tendCursor: String\n\t\thasnextPage: Boolean\n\t}\t\n`;\n\nexport default PageInfo;"]}

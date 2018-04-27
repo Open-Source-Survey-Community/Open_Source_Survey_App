@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const PreguntaSchema = new Schema({
-	descripcion:String,
+	descripcion:{type: String, index: true},
 	usuario_ID: {
 		type: Schema.Types.ObjectId,
 		ref: "usuario"
@@ -33,7 +33,7 @@ const PreguntaSchema = new Schema({
 		observacion: String,
 		fecha_asignacion:{type: Date, index:true}
 	}],
-	estado:{type: String, index: true, default: "revision"},
+	estado:{type: String, default: "revision"},
 	tipoPregunta: {type: String, default: "open answer"},
 	areaconocimiento:[{
 		type: Schema.Types.ObjectId,

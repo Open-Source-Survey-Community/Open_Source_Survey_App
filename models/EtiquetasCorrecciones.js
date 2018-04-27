@@ -9,7 +9,7 @@ const etiquetasCorreccionesSchema = new Schema({
 	idioma: String,
 	color: String,
 	descripcion: String,
-	etiqueta:String,
+	etiqueta:{type: String, index: true},
 	categoria: String
 });
 

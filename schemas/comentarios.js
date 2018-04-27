@@ -42,6 +42,7 @@ const Comentario = `
 		}
 		type Query{
 			verComentario(idComentario: String): Comentario
+			verListaSubComentarios(idComentario: String): [Comentario]
 		}
 		
 		type Mutation {

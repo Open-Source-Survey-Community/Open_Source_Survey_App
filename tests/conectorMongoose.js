@@ -16,7 +16,7 @@ let connect = ()=>{
 		mongoose.connect(database.databaseTesting, options);
 		mongoose.connection.
 			once("open",()=> {
-				logger.info("CONNECTION SUCCESFULL DATABASE TESTING");
+				logger.info("CONNECTION SUCCESFULL DATABASE TESTING 22");
 				resolve();
 			}).on("error", (error)=> {
 				logger.info("ERROR", error);
