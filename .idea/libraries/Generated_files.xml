@@ -3,12 +3,14 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/dist/resolvers/comentarios.js" />
+        <item url="file://$PROJECT_DIR$/dist/resolvers/pregunta.js" />
         <item url="file://$PROJECT_DIR$/dist/schemas/comentarios.js" />
         <item url="file://$PROJECT_DIR$/dist/tests/integration/comentarios.test.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/dist/resolvers/comentarios.js" />
+      <root url="file://$PROJECT_DIR$/dist/resolvers/pregunta.js" />
       <root url="file://$PROJECT_DIR$/dist/schemas/comentarios.js" />
       <root url="file://$PROJECT_DIR$/dist/tests/integration/comentarios.test.js" />
     </CLASSES>

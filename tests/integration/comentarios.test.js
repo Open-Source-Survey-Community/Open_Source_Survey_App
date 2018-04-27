@@ -406,4 +406,31 @@ describe("Acciones de consulta para el modelo comentario", function(){
                 done();
             });
     });
+    it("Deberia ver la lista de comentarios asociado a una pregunta", function (done) {
+        self
+            .test(JSON.stringify({
+                query: `query verComentariosAsociadosPregunta($idPregunta: String, $limit: Int, $index: Int){
+							  verComentariosAsociadosPregunta(idPregunta: $idPregunta, limit: $limit, index: $index){
+							  			edges{
+							  				identificador
+							  				contenido
+							  			}
+							  			hasnextElement
+							  				
+							 			}				
+						}`,
+                variables:{
+                    idPregunta:"5addfc4dff628f04be5dcc97",
+					limit: 5,
+					index: 0
+                }
+            }))
+            .then(response => {
+            	console.log(response);
+                expect(response.status).toBe(200);
+                expect(response.success).toBe(true);
+                expect(response.data.verComentariosAsociadosPregunta.hasnextElement).toBe(false);
+                done();
+            });
+    });
 });

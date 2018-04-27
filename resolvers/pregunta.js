@@ -625,18 +625,13 @@ export default {
 											reject(error);
 										}
 									});
-
 							},(error)=>{
 								if (error){
 									reject(error);
 								}
 								resolve(true);
 							});
-
 						});
-
-
-
 					}else{
 						throw new Error("this user isn't committe member, so that you can't assign this question");
 					}
@@ -652,8 +647,8 @@ export default {
 						throw new Error("you can't re-assign a state if you" +
 							"are the owner the question");
 					}else if(registroPregunta.estados_asignados[0].usuario == args.idUsuario){
-						return models.Pregunta.findOneAndUpdate({_id:args.idPregunta,"estados_asignados.usuario": args.idUsuario},{
-							$set:{"estado": args.estado,"estados_asignados.$.estado_asignado":args.estado,
+						return models.Pregunta.findOneAndUpdate({_id:args.idPregunta,"estados_asignados.usuario": args.idUsuario},
+							{$set:{"estado": args.estado,"fecha_cierre":new Date,"estados_asignados.$.estado_asignado":args.estado,
 								"estados_asignados.$.observacion":args.observacion}
 						},{new: true}).then(preguntaActualizada => {
 							return preguntaActualizada;
@@ -688,11 +683,9 @@ export default {
 								throw new Error(error);
 							}
 						});
-						
 					}else{
 						throw new Error("only commite member can assigned this questions");
 					}
-
 				}).catch(error => {
 					if (error){
 						throw new Error(error);

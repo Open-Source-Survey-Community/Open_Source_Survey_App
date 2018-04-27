@@ -35,6 +35,55 @@ export default {
 				}).catch(error =>{
 					throw new Error(error);
 				});
+		},
+		verComentariosAsociadosPregunta: (parent, args, {models})=>{
+			let hasnextPage = new Promise((resolve, reject) =>{
+				let valor= args.index + 1;
+				let tamanoPaginas = args.limit * valor;
+				return models.Pregunta.findById(args.idPregunta,"comentarios")
+					.then(listaComentarios =>{
+						if (tamanoPaginas >= listaComentarios.comentarios.length){
+							resolve(false);
+						}else{
+							resolve(true);
+						}
+					}).catch(error =>{
+						reject(error);
+					});
+			});
+			let edges = new Promise((resolve, reject) =>{
+               return models.Pregunta.findById(args.idPregunta,"comentarios")
+					.skip(args.index*args.limit)
+					.limit(args.limit)
+                    .populate({
+                        path:"comentarios",
+                        populate:{
+                            path:"creador_comentario",
+                            model: "usuario"
+                        }
+                    })
+                    .populate({
+                        path: "comentarios",
+                        populate:{
+                            path:"votacion.usuario_creador",
+                            model:"usuario"
+                        }
+                    })
+                    .then(listaComentarios =>{
+						resolve(listaComentarios.comentarios);
+
+                    }).catch(error =>{
+                    reject(error);
+                });
+			});
+			return Promise.all([hasnextPage, edges]).then(valores =>{
+				return {
+					edges: valores[1],
+					hasnextElement: valores[0]
+				}
+			}).catch(error =>{
+				throw new Error(error);
+			});
 		}
 	},
 	Mutation:{

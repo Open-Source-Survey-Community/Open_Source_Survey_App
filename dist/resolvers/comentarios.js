@@ -37,11 +37,55 @@ exports.default = {
 			}).catch(function (error) {
 				throw new Error(error);
 			});
+		},
+		verComentariosAsociadosPregunta: function verComentariosAsociadosPregunta(parent, args, _ref3) {
+			var models = _ref3.models;
+
+			var hasnextPage = new Promise(function (resolve, reject) {
+				var valor = args.index + 1;
+				var tamanoPaginas = args.limit * valor;
+				return models.Pregunta.findById(args.idPregunta, "comentarios").then(function (listaComentarios) {
+					if (tamanoPaginas >= listaComentarios.comentarios.length) {
+						resolve(false);
+					} else {
+						resolve(true);
+					}
+				}).catch(function (error) {
+					reject(error);
+				});
+			});
+			var edges = new Promise(function (resolve, reject) {
+				return models.Pregunta.findById(args.idPregunta, "comentarios").skip(args.index * args.limit).limit(args.limit).populate({
+					path: "comentarios",
+					populate: {
+						path: "creador_comentario",
+						model: "usuario"
+					}
+				}).populate({
+					path: "comentarios",
+					populate: {
+						path: "votacion.usuario_creador",
+						model: "usuario"
+					}
+				}).then(function (listaComentarios) {
+					resolve(listaComentarios.comentarios);
+				}).catch(function (error) {
+					reject(error);
+				});
+			});
+			return Promise.all([hasnextPage, edges]).then(function (valores) {
+				return {
+					edges: valores[1],
+					hasnextElement: valores[0]
+				};
+			}).catch(function (error) {
+				throw new Error(error);
+			});
 		}
 	},
 	Mutation: {
-		crearComentarioAnexadaAPregunta: function crearComentarioAnexadaAPregunta(parent, args, _ref3) {
-			var models = _ref3.models;
+		crearComentarioAnexadaAPregunta: function crearComentarioAnexadaAPregunta(parent, args, _ref4) {
+			var models = _ref4.models;
 
 			return models.Comentario.count().then(function (existenComentariosCreados) {
 				if (existenComentariosCreados) {
@@ -65,8 +109,8 @@ exports.default = {
 				throw new Error(error);
 			});
 		},
-		crearComentarioAnexadaADiscusionPregunta: function crearComentarioAnexadaADiscusionPregunta(parent, args, _ref4) {
-			var models = _ref4.models;
+		crearComentarioAnexadaADiscusionPregunta: function crearComentarioAnexadaADiscusionPregunta(parent, args, _ref5) {
+			var models = _ref5.models;
 
 			return models.Comentario.count().then(function (existenComentariosCreados) {
 				if (existenComentariosCreados) {
@@ -90,8 +134,8 @@ exports.default = {
 				throw new Error(error);
 			});
 		},
-		crearSubComentarioAnexadaAComentario: function crearSubComentarioAnexadaAComentario(parent, args, _ref5) {
-			var models = _ref5.models;
+		crearSubComentarioAnexadaAComentario: function crearSubComentarioAnexadaAComentario(parent, args, _ref6) {
+			var models = _ref6.models;
 
 			return models.Comentario.count().then(function (existenComentariosCreados) {
 				if (existenComentariosCreados) {
@@ -115,8 +159,8 @@ exports.default = {
 				throw new Error(error);
 			});
 		},
-		editarComentario: function editarComentario(parent, args, _ref6) {
-			var models = _ref6.models;
+		editarComentario: function editarComentario(parent, args, _ref7) {
+			var models = _ref7.models;
 
 			return models.Comentario.findById(args.idComentario).then(function (registroComentario) {
 				if (registroComentario.creador_comentario == args.idUsuario) {
@@ -134,8 +178,8 @@ exports.default = {
 				}
 			});
 		},
-		colocarLikesComentario: function colocarLikesComentario(parent, args, _ref7) {
-			var models = _ref7.models;
+		colocarLikesComentario: function colocarLikesComentario(parent, args, _ref8) {
+			var models = _ref8.models;
 
 			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
 				if (comentario) {
@@ -186,8 +230,8 @@ exports.default = {
 				}
 			});
 		},
-		colocarDisLikesComentario: function colocarDisLikesComentario(parent, args, _ref8) {
-			var models = _ref8.models;
+		colocarDisLikesComentario: function colocarDisLikesComentario(parent, args, _ref9) {
+			var models = _ref9.models;
 
 			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
 				if (comentario) {
@@ -238,8 +282,8 @@ exports.default = {
 				}
 			});
 		},
-		colocarFavoritosComentario: function colocarFavoritosComentario(parent, args, _ref9) {
-			var models = _ref9.models;
+		colocarFavoritosComentario: function colocarFavoritosComentario(parent, args, _ref10) {
+			var models = _ref10.models;
 
 			return models.Comentario.findOne({ "_id": args.idComentario, "votacion.usuario_creador": args.idUsuario }, { "votacion.$": 1 }).then(function (comentario) {
 				if (comentario) {

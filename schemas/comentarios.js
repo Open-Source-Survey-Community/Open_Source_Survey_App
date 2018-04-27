@@ -23,16 +23,9 @@ const Comentario = `
 			dislike: Int
 		}
 		
-		
-		
 		type ComentarioConnection {
-			totalCount: Int
-			edges: [ComentarioEdge]
-			pageInfo: PageInfo
-		}
-		type ComentarioEdge {
-			cursor: String
-			node: Comentario
+			edges: [Comentario]
+			hasnextElement: Boolean
 		}
 		
 		input ComentarioInput {
@@ -43,7 +36,8 @@ const Comentario = `
 		type Query{
 			verComentario(idComentario: String): Comentario
 			verListaSubComentarios(idComentario: String): Comentario
-			verComentariosAsociadosPregunta(idPregunta: String):[Comentario]
+			verComentariosAsociadosPregunta(idPregunta: String, limit: Int, index: Int):ComentarioConnection
+			verComentariosAsociadosDiscusionPregunta(idDiscusionPregunta: String, limit: Int, index: Int):ComentarioConnection
 		}
 		
 		type Mutation {
