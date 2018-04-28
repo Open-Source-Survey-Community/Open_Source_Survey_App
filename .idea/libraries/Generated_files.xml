@@ -3,16 +3,24 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/dist/resolvers/comentarios.js" />
+        <item url="file://$PROJECT_DIR$/dist/resolvers/meritos_usuarios.js" />
         <item url="file://$PROJECT_DIR$/dist/resolvers/pregunta.js" />
         <item url="file://$PROJECT_DIR$/dist/schemas/comentarios.js" />
+        <item url="file://$PROJECT_DIR$/dist/schemas/discusion-pregunta.js" />
+        <item url="file://$PROJECT_DIR$/dist/schemas/meritos_usuarios.js" />
         <item url="file://$PROJECT_DIR$/dist/tests/integration/comentarios.test.js" />
+        <item url="file://$PROJECT_DIR$/dist/tests/integration/meritos_usuarios.test.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
       <root url="file://$PROJECT_DIR$/dist/resolvers/comentarios.js" />
+      <root url="file://$PROJECT_DIR$/dist/resolvers/meritos_usuarios.js" />
       <root url="file://$PROJECT_DIR$/dist/resolvers/pregunta.js" />
       <root url="file://$PROJECT_DIR$/dist/schemas/comentarios.js" />
+      <root url="file://$PROJECT_DIR$/dist/schemas/discusion-pregunta.js" />
+      <root url="file://$PROJECT_DIR$/dist/schemas/meritos_usuarios.js" />
       <root url="file://$PROJECT_DIR$/dist/tests/integration/comentarios.test.js" />
+      <root url="file://$PROJECT_DIR$/dist/tests/integration/meritos_usuarios.test.js" />
     </CLASSES>
     <SOURCES />
   </library>

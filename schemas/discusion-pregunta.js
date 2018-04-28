@@ -59,7 +59,7 @@ const DiscusionPregunta = `
 		getListaIssuesByQuestions(limit: Int, after: String,idPregunta: String!): DiscusionPreguntaConnection
 		
 		## Este query me permite obtener la lista de los usuarios que han asignado
-		## los estados de correcciones de pregunta, aqui se deben cargar informacion 
+		## los estados de correcciones de una pregunta, aqui se deben cargar informacion 
 		## tanto del creador de la correccion, como son los moderadores
 		getListaUsuariosAsignadoEstadoCorreccionPregunta(idDiscusionPregunta: String!): DiscusionPregunta
 		
