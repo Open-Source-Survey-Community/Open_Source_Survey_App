@@ -87,4 +87,23 @@ describe("Pruebas de cobertura acerca del schema meritos_usuarios", function (){
                 done();
             });
     });
+    it("Deberia poder ver la cantidad de comentarios elaboradas por un usuario" , function (done) {
+        self
+            .test(JSON.stringify({
+                query: `query getCantidadComentariosElaboradosByUsuario($idUsuario: String){
+							getCantidadComentariosElaboradosByUsuario(idUsuario:$idUsuario)
+							      
+								
+				}`,
+                variables: {
+                    idUsuario: "5ade907216edf832bf53692b",
+                }
+            }))
+            .then(response => {
+                console.log(response);
+                expect(response.status).toBe(200);
+                expect(response.success).toBe(true);
+                done();
+            });
+    });
 });

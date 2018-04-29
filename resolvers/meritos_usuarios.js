@@ -42,6 +42,16 @@ export default {
                     throw new Error(error);
 
                 });
+        },
+        getCantidadComentariosElaboradosByUsuario: (parent, args, {models})=>{
+            return models.Comentario.count({"creador_comentario": args.idUsuario,"habilitada":true})
+                .then(cantidadComentarios=>{
+                    return cantidadComentarios;
+                }).catch(error =>{
+                    throw new Error(error);
+                });
+
+
         }
     }
 };

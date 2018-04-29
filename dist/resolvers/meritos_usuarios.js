@@ -40,6 +40,15 @@ exports.default = {
             }).catch(function (error) {
                 throw new Error(error);
             });
+        },
+        getCantidadComentariosElaboradosByUsuario: function getCantidadComentariosElaboradosByUsuario(parent, args, _ref5) {
+            var models = _ref5.models;
+
+            return models.Comentario.count({ "creador_comentario": args.idUsuario, "habilitada": true }).then(function (cantidadComentarios) {
+                return cantidadComentarios;
+            }).catch(function (error) {
+                throw new Error(error);
+            });
         }
     }
 };
