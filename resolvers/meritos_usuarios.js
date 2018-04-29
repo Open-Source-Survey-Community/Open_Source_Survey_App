@@ -1,7 +1,7 @@
 export default {
     Query:{
         getCantidadPreguntasElaboradasByUsuario:(parent, args, {models})=>{
-            return models.Pregunta.count({"usuario_ID": args.idUsuario})
+            return models.Pregunta.count({"usuario_ID": args.idUsuario,"registroActual":true})
                 .then(cantidadPreguntasElaboradas =>{
                     return cantidadPreguntasElaboradas;
                 })
@@ -21,6 +21,15 @@ export default {
 
                     });
 
+        },
+        getCantidadCorreccionesPreguntasElaboradasByUsuario:(parent, args, {models})=>{
+            return models.discusionPregunta.count({"creador_correccion": args.idUsuario,"habilitada":true})
+                .then(cantidadDiscusionPreguntasElaboradas =>{
+                    return cantidadDiscusionPreguntasElaboradas;
+                })
+                .catch(error =>{
+                    throw new Error(error);
+                });
         }
     }
 };

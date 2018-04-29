@@ -46,4 +46,23 @@ describe("Pruebas de cobertura acerca del schema meritos_usuarios", function (){
                 done();
             });
     });
+    it("Deberia poder ver la cantidad de correcciones de preguntas elaboradas por un usuario" , function (done) {
+        self
+            .test(JSON.stringify({
+                query: `query getCantidadCorreccionesPreguntasElaboradasByUsuario($idUsuario: String){
+							getCantidadCorreccionesPreguntasElaboradasByUsuario(idUsuario:$idUsuario)
+							      
+								
+				}`,
+                variables: {
+                    idUsuario: "5ac24c758e4a6a23d4869ac7",
+                }
+            }))
+            .then(response => {
+                console.log(response);
+                expect(response.status).toBe(200);
+                expect(response.success).toBe(true);
+                done();
+            });
+    });
 });
