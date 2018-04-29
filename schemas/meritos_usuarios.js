@@ -3,6 +3,7 @@ const meritosUsuario = `
             getCantidadPreguntasElaboradasByUsuario(idUsuario: String):Int
             getListaPreguntasElaboradasByUsuario(idUsuario: String):[Pregunta]
             getCantidadCorreccionesPreguntasElaboradasByUsuario(idUsuario: String):Int
+            getListaCorreccionesPreguntasElaboradasByUsuario(idUsuario: String):[DiscusionPregunta]
         }
 `;
 

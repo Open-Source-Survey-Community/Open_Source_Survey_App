@@ -31,6 +31,15 @@ exports.default = {
             }).catch(function (error) {
                 throw new Error(error);
             });
+        },
+        getListaCorreccionesPreguntasElaboradasByUsuario: function getListaCorreccionesPreguntasElaboradasByUsuario(parent, args, _ref4) {
+            var models = _ref4.models;
+
+            return models.discusionPregunta.find({ "creador_correccion": args.idUsuario, "habilitada": true }).populate("etiquetas_correcciones").sort({ "fecha_creacion": -1 }).limit(5).then(function (listadiscusionPreguntas) {
+                return listadiscusionPreguntas;
+            }).catch(function (error) {
+                throw new Error(error);
+            });
         }
     }
 };

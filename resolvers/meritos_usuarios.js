@@ -30,6 +30,18 @@ export default {
                 .catch(error =>{
                     throw new Error(error);
                 });
+        },
+        getListaCorreccionesPreguntasElaboradasByUsuario: (parent, args, {models})=>{
+            return models.discusionPregunta.find({"creador_correccion": args.idUsuario,"habilitada":true})
+                .populate("etiquetas_correcciones")
+                .sort({"fecha_creacion":-1})
+                .limit(5)
+                .then(listadiscusionPreguntas =>{
+                    return listadiscusionPreguntas;
+                }).catch(error =>{
+                    throw new Error(error);
+
+                });
         }
     }
 };

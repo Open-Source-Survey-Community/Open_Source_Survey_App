@@ -48,5 +48,18 @@ describe("Pruebas de cobertura acerca del schema meritos_usuarios", function () 
             done();
         });
     });
+    it("Deberia poder ver la lista de correcciones de preguntas elaboradas por un usuario", function (done) {
+        self.test(JSON.stringify({
+            query: "query getListaCorreccionesPreguntasElaboradasByUsuario($idUsuario: String){\n\t\t\t\t\t\t\tgetListaCorreccionesPreguntasElaboradasByUsuario(idUsuario:$idUsuario){\n\t\t\t\t\t\t\t    titulo\n\t\t\t\t\t\t\t    descripcion\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t      \n\t\t\t\t\t\t\t\t\n\t\t\t\t}",
+            variables: {
+                idUsuario: "5ac24c758e4a6a23d4869ac7"
+            }
+        })).then(function (response) {
+            console.log(response);
+            expect(response.status).toBe(200);
+            expect(response.success).toBe(true);
+            done();
+        });
+    });
 });
 //# sourceMappingURL=meritos_usuarios.test.js.map
