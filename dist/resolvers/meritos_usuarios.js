@@ -49,7 +49,17 @@ exports.default = {
             }).catch(function (error) {
                 throw new Error(error);
             });
+        },
+        getListaComentariosElaboradasByUsuario: function getListaComentariosElaboradasByUsuario(parent, args, _ref6) {
+            var models = _ref6.models;
+
+            return models.Comentario.find({ "creador_comentario": args.idUsuario, "habilitada": true }).populate("votacion.usuario_creador").sort({ "fecha_creacion": -1 }).limit(5).then(function (listaComentarios) {
+                return listaComentarios;
+            }).catch(function (error) {
+                throw new Error(error);
+            });
         }
+
     }
 };
 //# sourceMappingURL=meritos_usuarios.js.map

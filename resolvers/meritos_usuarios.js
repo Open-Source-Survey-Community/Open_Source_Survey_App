@@ -50,8 +50,19 @@ export default {
                 }).catch(error =>{
                     throw new Error(error);
                 });
+        },
+        getListaComentariosElaboradasByUsuario: (parent, args, {models})=>{
+            return models.Comentario.find({"creador_comentario": args.idUsuario,"habilitada":true})
+                .populate("votacion.usuario_creador")
+                .sort({"fecha_creacion":-1})
+                .limit(5)
+                .then(listaComentarios =>{
+                    return listaComentarios;
+                }).catch(error =>{
+                    throw new Error(error);
 
-
+                });
         }
+
     }
 };

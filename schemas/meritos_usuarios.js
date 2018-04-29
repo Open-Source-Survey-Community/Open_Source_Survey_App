@@ -5,6 +5,7 @@ const meritosUsuario = `
             getCantidadCorreccionesPreguntasElaboradasByUsuario(idUsuario: String):Int
             getListaCorreccionesPreguntasElaboradasByUsuario(idUsuario: String):[DiscusionPregunta]
             getCantidadComentariosElaboradosByUsuario(idUsuario: String): Int
+            getListaComentariosElaboradasByUsuario(idUsuario: String): [Comentario]
         }
 `;
 
