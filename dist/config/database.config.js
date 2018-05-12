@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 var database = {
 	"secret": "lavidanoesbellaesdura",
 	"databaseDevelopment": "mongodb://localhost/OpenSourceSurveyDocumentDevelopment",
-	"databaseProduction": "mongodb://kevinortiz:263605kevin$@cluster0-shard-00-00-bynq0.mongodb.net:27017/",
+	"databaseProduction": 'mongodb://kevinortiz:V3keSQvoUBad2Ipc@opensourcesurvey-shard-00-00-bynq0.mongodb.net:27017,opensourcesurvey-shard-00-01-bynq0.mongodb.net:27017,opensourcesurvey-shard-00-02-bynq0.mongodb.net:27017/test?ssl=true&replicaSet=OpenSourceSurvey-shard-0&authSource=admin&retryWrites=true',
 	"databaseTesting": "mongodb://localhost/OpenSourceSurveyDocumentTesting"
 };
 
 exports.default = database;
-//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL2NvbmZpZy9kYXRhYmFzZS5jb25maWcuanMiXSwibmFtZXMiOlsiZGF0YWJhc2UiXSwibWFwcGluZ3MiOiI7Ozs7O0FBQUEsSUFBTUEsV0FBVztBQUNoQixXQUFVLHVCQURNO0FBRWhCLHdCQUFzQix5REFGTjtBQUdoQix1QkFBcUIsaUZBSEw7QUFJaEIsb0JBQWtCO0FBSkYsQ0FBakI7O2tCQU9lQSxRIiwiZmlsZSI6ImRhdGFiYXNlLmNvbmZpZy5qcyIsInNvdXJjZXNDb250ZW50IjpbImNvbnN0IGRhdGFiYXNlID0ge1xuXHRcInNlY3JldFwiOiBcImxhdmlkYW5vZXNiZWxsYWVzZHVyYVwiLFxuXHRcImRhdGFiYXNlRGV2ZWxvcG1lbnRcIjpcIm1vbmdvZGI6Ly9sb2NhbGhvc3QvT3BlblNvdXJjZVN1cnZleURvY3VtZW50RGV2ZWxvcG1lbnRcIixcblx0XCJkYXRhYmFzZVByb2R1Y3Rpb25cIjpcIm1vbmdvZGI6Ly9rZXZpbm9ydGl6OjI2MzYwNWtldmluJEBjbHVzdGVyMC1zaGFyZC0wMC0wMC1ieW5xMC5tb25nb2RiLm5ldDoyNzAxNy9cIixcblx0XCJkYXRhYmFzZVRlc3RpbmdcIjpcIm1vbmdvZGI6Ly9sb2NhbGhvc3QvT3BlblNvdXJjZVN1cnZleURvY3VtZW50VGVzdGluZ1wiXG59O1xuXG5leHBvcnQgZGVmYXVsdCBkYXRhYmFzZTsiXX0=
+//# sourceMappingURL=database.config.js.map

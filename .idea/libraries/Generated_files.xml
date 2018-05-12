@@ -2,23 +2,33 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/dist/config/database.config.js" />
+        <item url="file://$PROJECT_DIR$/dist/productionServer.js" />
         <item url="file://$PROJECT_DIR$/dist/resolvers/comentarios.js" />
         <item url="file://$PROJECT_DIR$/dist/resolvers/meritos_usuarios.js" />
         <item url="file://$PROJECT_DIR$/dist/resolvers/pregunta.js" />
         <item url="file://$PROJECT_DIR$/dist/schemas/comentarios.js" />
         <item url="file://$PROJECT_DIR$/dist/schemas/discusion-pregunta.js" />
         <item url="file://$PROJECT_DIR$/dist/schemas/meritos_usuarios.js" />
+        <item url="file://$PROJECT_DIR$/dist/server.js" />
+        <item url="file://$PROJECT_DIR$/dist/serverTest.js" />
+        <item url="file://$PROJECT_DIR$/dist/tests/conectorMongoose.js" />
         <item url="file://$PROJECT_DIR$/dist/tests/integration/comentarios.test.js" />
         <item url="file://$PROJECT_DIR$/dist/tests/integration/meritos_usuarios.test.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
+      <root url="file://$PROJECT_DIR$/dist/config/database.config.js" />
+      <root url="file://$PROJECT_DIR$/dist/productionServer.js" />
       <root url="file://$PROJECT_DIR$/dist/resolvers/comentarios.js" />
       <root url="file://$PROJECT_DIR$/dist/resolvers/meritos_usuarios.js" />
       <root url="file://$PROJECT_DIR$/dist/resolvers/pregunta.js" />
       <root url="file://$PROJECT_DIR$/dist/schemas/comentarios.js" />
       <root url="file://$PROJECT_DIR$/dist/schemas/discusion-pregunta.js" />
       <root url="file://$PROJECT_DIR$/dist/schemas/meritos_usuarios.js" />
+      <root url="file://$PROJECT_DIR$/dist/server.js" />
+      <root url="file://$PROJECT_DIR$/dist/serverTest.js" />
+      <root url="file://$PROJECT_DIR$/dist/tests/conectorMongoose.js" />
       <root url="file://$PROJECT_DIR$/dist/tests/integration/comentarios.test.js" />
       <root url="file://$PROJECT_DIR$/dist/tests/integration/meritos_usuarios.test.js" />
     </CLASSES>

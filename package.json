@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
-    "start": "npm run build && node dist/server.js"
+    "start": "npm run build && node dist/productionServer.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/Open-Source-Survey-Community/Open_Source_Survey_App#readme",
   "dependencies": {
+    "apollo-engine": "^1.1.1",
     "apollo-server-express": "^1.3.2",
     "async": "^2.6.0",
     "bluebird": "^3.5.1",
@@ -46,7 +47,7 @@
     "redis": "^2.8.0",
     "underscore-node": "^0.1.2"
   },
-  "engines":{
+  "engines": {
     "node": "8.9.2"
   },
   "devDependencies": {
