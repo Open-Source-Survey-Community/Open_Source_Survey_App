@@ -79,7 +79,7 @@ var engine = new ApolloEngine({
     logging: {
         level: 'DEBUG' // Engine Proxy logging level. DEBUG, INFO, WARN or ERROR
     },
-    apiKey: process.env.ENGINE_API_KEY || 'GBObpSxuDtTHT8qeVQMVTA'
+    apiKey: process.env.ENGINE_API_KEY || 'service:Open-Source-Survey-Community-6275:GBObpSxuDtTHT8qeVQMVTA'
 });
 
 app.use("/graphql", bodyParser.json(), graphqlExpress({
